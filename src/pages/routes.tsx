@@ -24,9 +24,9 @@ const LoginPage = () => (
 );
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isAuth = useAuthStore((state) => state.isAuthenticated);
   // Si no está logueado (false), lo manda a /login automáticamente
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuth ? children : <Navigate to="/login" />;
 };
 
 export const AppRouter = () => {
