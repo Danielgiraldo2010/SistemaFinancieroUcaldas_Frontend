@@ -1,21 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Definimos qué datos queremos guardar del usuario
-interface User {
-  id: string;
-  nombre: string;
-  rol: 'ADMIN' | 'USER' | 'AUDITOR';
-  email: string;
-}
-
 interface AuthState {
   token: string | null;
-  user: User | null;
-  isAuth: boolean;
-  // Acciones para modificar el estado
+  isAuthenticated: boolean;
   setToken: (token: string) => void;
-  setUser: (user: User) => void;
   logout: () => void;
 }
 
@@ -23,29 +12,18 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       token: null,
-      user: null,
-      isAuth: false,
+      isAuthenticated: false,
 
-      setToken: (token: string) =>
-        set(() => ({
-          token,
-          isAuth: !!token,
-        })),
+      // Guarda el token y marca como autenticado
+      setToken: (token: string) => 
+        set({ token, isAuthenticated: true }),
 
-      setUser: (user: User) =>
-        set(() => ({
-          user,
-        })),
-
-      logout: () =>
-        set(() => ({
-          token: null,
-          user: null,
-          isAuth: false,
-        })),
+      // Limpia todo al cerrar sesión
+      logout: () => 
+        set({ token: null, isAuthenticated: false }),
     }),
     {
-      name: 'auth-storage', // Nombre de la llave en LocalStorage
-    },
-  ),
+      name: 'auth-storage', // Nombre de la "llave" en localStorage
+    }
+  )
 );
