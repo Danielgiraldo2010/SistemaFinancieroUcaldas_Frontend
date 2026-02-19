@@ -1,5 +1,5 @@
 import { StatCard } from '@/shared/components/StatCard';
-import { ProjectsTable } from '@/shared/components/ProjectsTable';
+import { ProjectsTable } from '@/features/dashboard/components/ProjectsTable';
 
 export const SecretaryDashboard = () => {
   return (

@@ -1,21 +1,19 @@
-// Definimos los botones que estan en el mokup
-const menuItems = [
-  { label: 'Resumen Global', icon: '📊', active: true },
-  { label: 'Gestión de Ingresos', icon: '📈', active: false },
-  { label: 'Gastos y Ejecución', icon: '💰', active: false },
-  { label: 'Nómina', icon: '👥', active: false },
-  { label: 'Normatividad BPMN', icon: '📋', active: false },
-  { label: 'Auditoría Reforzada', icon: '🛡️', active: false },
-];
+import React from 'react';
+import type { MenuItem } from '@shared/constants/navigation';
 
-export const Sidebar = () => {
+interface SidebarProps {
+  // ✅ Recibimos el array como prop
+  menuItems: MenuItem[];
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
   return (
     <aside className="w-72 bg-[#002D57] text-white flex flex-col h-screen shadow-2xl transition-all">
       {/* Logo y Nombre de la Universidad */}
       <div className="p-8 border-b border-white/5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-            <span className="text-xl">☀️</span> {/* Aquí irá el logo de assets */}
+            <span className="text-xl">☀️</span>
           </div>
           <div>
             <h1 className="text-2xl font-black tracking-tighter leading-none">SAPFIAI</h1>
@@ -26,7 +24,7 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      {/* Navegación Principal */}
+      {/* Navegación Principal Dinámica */}
       <nav className="flex-1 px-4 py-6 space-y-1">
         {menuItems.map((item) => (
           <button
@@ -50,7 +48,7 @@ export const Sidebar = () => {
         ))}
       </nav>
 
-      {/* Perfil de Usuario (Pie del Sidebar) */}
+      {/* Perfil de Usuario */}
       <div className="p-6 bg-black/10 border-t border-white/5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[#C5A059] flex items-center justify-center text-sm font-bold text-[#002D57]">
