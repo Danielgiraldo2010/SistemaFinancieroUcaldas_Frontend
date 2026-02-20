@@ -1,4 +1,5 @@
 import axios from 'axios';
+<<<<<<< HEAD
 // Usamos el alias profesional que acabas de configurar
 import type { LoginDTO } from '@shared/validators/auth.validator';
 
@@ -10,3 +11,13 @@ export const loginRequest = async (data: LoginDTO) => {
   const response = await axios.post(`${API_URL}/Authentication/login`, data);
   return response.data;
 };
+=======
+import { LoginDTO } from '@shared/validators/auth.validator';
+
+const API_URL = '/api/Authentication';
+
+export const loginRequest = async (data: LoginDTO) => {
+  const response = await axios.post(`${API_URL}/login`, data);
+  return response.data;
+};
+>>>>>>> 76b9cdc (feat(auth): merge login UI con rama feat/login)

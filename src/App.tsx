@@ -1,19 +1,51 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { LoginPage } from '@/features/auth/pages/LoginPage';
+
+// Nota: Cuando tu compañera termine su componente, lo importaremos aquí.
+// Por ahora, dejamos el espacio preparado.
+
 function App() {
   return (
-    // 'bg-ucaldas-blue' debe pintar el fondo del azul oscuro de tus mockups
-    <div className="min-h-screen flex flex-col items-center justify-center bg-ucaldas-blue p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">¡SAPFIAI Conectado!</h1>
-        <p className="text-gray-600 mb-6">
-          Si ves este botón dorado y el fondo azul, Tailwind está funcionando correctamente.
-        </p>
+    <BrowserRouter>
+      <Routes>
+        {/* 1. Ruta de Inicio de Sesión (Tu parte) */}
+        <Route path="/login" element={<LoginPage />} />
 
-        {/* 'bg-ucaldas-gold' debe ser el color dorado de tus diseños */}
-        <button className="bg-ucaldas-gold hover:bg-opacity-90 text-white font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105 shadow-lg">
-          Prueba de Estilo
-        </button>
-      </div>
-    </div>
+        {/* 2. Ruta de Verificación (La puerta para tu compañera) */}
+        <Route 
+          path="/auth/verify" 
+          element={
+            <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+              <div className="p-8 bg-white shadow-xl rounded-lg text-center">
+                <h2 className="text-2xl font-bold text-[#002855] mb-4">
+                  Verificación de Seguridad
+                </h2>
+                <p className="text-gray-600">
+                  Por favor, ingresa el código de verificación.
+                </p>
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded text-blue-700 text-sm italic">
+                  (Esperando el componente de verificación de la compañera...)
+                </div>
+              </div>
+            </div>
+          } 
+        />
+
+        {/* 3. Ruta del Dashboard (El destino final del sistema) */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <div className="p-10 text-center">
+              <h1 className="text-3xl font-bold">Panel de Control Principal</h1>
+              <p className="text-green-600 mt-2">¡Sesión iniciada con éxito!</p>
+            </div>
+          } 
+        />
+
+        {/* 4. Redirección por defecto: Si la ruta no existe, vuelve al login */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
