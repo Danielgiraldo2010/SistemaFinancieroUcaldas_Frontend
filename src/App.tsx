@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TwoFactorPage } from '@features/auth/pages/TwoFactorPage';
 import { LoginPage } from '@features/auth/pages/LoginPage';
