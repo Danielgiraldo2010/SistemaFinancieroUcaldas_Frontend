@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import { LoginView } from './LoginView';
 import bgUniversidad from '@assets/image/bg-universidad.png';
 import logoUcaldas from '@assets/image/logo-u-caldas.png';
 import logoCidt from '@assets/image/logo-cidtt.png';
+=======
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+// Importaciones limpias con Alias
+import { loginSchema, type LoginDTO } from '@shared/validators/auth.validator';
+import { loginRequest } from '../services/auth.service'; // Este es relativo porque está en la misma feature
+import { useAuthStore } from '@store/auth.store';
+>>>>>>> main
 
 export const LoginPage = () => {
   const { register, handleSubmit, loading, apiError, errors } = useLogin();

@@ -16,6 +16,7 @@ export default defineConfig({
       '@constants': path.resolve(__dirname, './src/constants'),
     },
   },
+<<<<<<< HEAD
   server: {
     proxy: {
       // Esto soluciona el "CORS error" que viste en el Network
@@ -29,3 +30,6 @@ export default defineConfig({
     }
   }
 });
+=======
+});
+>>>>>>> main

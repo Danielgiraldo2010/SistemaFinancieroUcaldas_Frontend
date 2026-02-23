@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import React from 'react';
+>>>>>>> main
 import { Sidebar } from '@shared/components/Sidebar';
 import { Header } from '@shared/components/Header';
 // 1. Importamos la lista de navegación específica para el rol
@@ -7,7 +11,11 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
+<<<<<<< HEAD
 export const MainLayout = ({ children }: MainLayoutProps) => {
+=======
+export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+>>>>>>> main
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
       {/* 2. Inyectamos los items del menú al Sidebar vía props */}
