@@ -10,8 +10,6 @@
 
 ---
 
-# PRUEBA SEGURIDAD MAIN
-
 ## 📋 Descripción
 
 **SAPFIAI** es una plataforma web SPA desarrollada con **Next.js + React + TypeScript**, orientada a la administración financiera y de seguridad, consumiendo una API backend bajo arquitectura limpia.
