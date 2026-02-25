@@ -10,7 +10,6 @@
 
 ---
 
-# PRUEBA SEGURIDAD MAIN
 
 ## 📋 Descripción
 
