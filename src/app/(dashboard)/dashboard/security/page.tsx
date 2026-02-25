@@ -64,10 +64,12 @@ export default function SecurityPage() {
             <tbody>
               {ips.map((ip) => (
                 <tr key={ip.ipAddress} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '600', color: '#111827', fontFamily: 'monospace' }}>{ip.ipAddress}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '600', color: '#111827', fontFamily: 'monospace' }}>{ip.ipAddress ?? '—'}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', backgroundColor: '#fee2e2', color: '#991b1b' }}>
-                      {reasonLabel[ip.blackListReason] ?? ip.reason}
+                      {ip.blackListReason !== undefined && reasonLabel[ip.blackListReason] !== undefined
+                        ? reasonLabel[ip.blackListReason]
+                        : ip.reason}
                     </span>
                   </td>
                   <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>{ip.blockedBy ?? '—'}</td>
@@ -75,7 +77,10 @@ export default function SecurityPage() {
                     {ip.expiryDate ? format(new Date(ip.expiryDate), 'dd/MM/yy HH:mm') : '∞ Permanente'}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
-                    <button onClick={() => handleUnblock(ip.ipAddress)} disabled={unlocking === ip.ipAddress} style={{
+                    <button
+                      onClick={() => ip.ipAddress && handleUnblock(ip.ipAddress)}
+                      disabled={unlocking === ip.ipAddress || !ip.ipAddress}
+                      style={{
                       padding: '6px 14px', backgroundColor: '#dcfce7', color: '#166534',
                       border: '1px solid #bbf7d0', borderRadius: '8px',
                       cursor: unlocking === ip.ipAddress ? 'not-allowed' : 'pointer',

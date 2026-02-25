@@ -1,6 +1,8 @@
+
 // ============================================================
 // MODELOS DE SEGURIDAD — generados desde swagger.json
 // ============================================================
+import type { BaseEntity } from './common.types';
 
 export interface IpBlackList extends BaseEntity {
   ipAddress?: string;

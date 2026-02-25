@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
     const { path } = await params;
-    const pathString = path.join('/');
+    const pathString = (path ?? []).join('/');
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     
     if (!backendUrl) {
@@ -50,11 +50,11 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
     const { path } = await params;
-    const pathString = path.join('/');
+    const pathString = (path ?? []).join('/');
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     
     if (!backendUrl) {
@@ -96,11 +96,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
     const { path } = await params;
-    const pathString = path.join('/');
+    const pathString = (path ?? []).join('/');
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     
     if (!backendUrl) {
@@ -143,11 +143,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
     const { path } = await params;
-    const pathString = path.join('/');
+    const pathString = (path ?? []).join('/');
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
     
     if (!backendUrl) {
