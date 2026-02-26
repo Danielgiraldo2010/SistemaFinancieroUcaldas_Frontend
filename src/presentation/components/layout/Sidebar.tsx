@@ -1,119 +1,184 @@
-'use client';
-import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuthStore } from '@/presentation/store/authStore';
-import { authService } from '@/infrastructure/api/auth/AuthService';
+"use client";
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
+// Importamos los iconos de Lucide
+import {
+  LayoutDashboard,
+  ClipboardList,
+  ShieldCheck,
+  UserCircle,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 interface NavItem {
-  icon: string;
+  icon: any; // Cambiamos de string a componente
   label: string;
   href: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { icon: '📊', label: 'Dashboard',      href: '/dashboard' },
-  { icon: '📋', label: 'Audit Logs',     href: '/dashboard/audit-logs' },
-  { icon: '🛡️',  label: 'Seguridad IPs', href: '/dashboard/security' },
-  { icon: '👤', label: 'Perfil',         href: '/dashboard/profile' },
-  { icon: '⚙️', label: 'Configuración',  href: '/dashboard/settings' },
+  { icon: LayoutDashboard, label: "Resumen Global", href: "/dashboard" },
+  { icon: ClipboardList, label: "Audit Logs", href: "/dashboard/audit-logs" },
+  { icon: ShieldCheck, label: "Seguridad IPs", href: "/dashboard/security" },
+  { icon: UserCircle, label: "Perfil", href: "/dashboard/profile" },
+  { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
 ];
 
 export function Sidebar() {
-  const router   = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
-  const { user, logout } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
-  const [logingOut, setLogingOut] = useState(false);
-
-  const handleLogout = async () => {
-    setLogingOut(true);
-    try { await authService.logout(); } finally {
-      logout();
-      router.push('/login');
-    }
-  };
-
-  const W = collapsed ? '72px' : '260px';
 
   return (
-    <aside style={{
-      width: W, minHeight: '100vh',
-      background: 'linear-gradient(180deg, #1e1b4b 0%, #312e81 100%)',
-      display: 'flex', flexDirection: 'column',
-      transition: 'width 0.25s ease', overflow: 'hidden',
-      flexShrink: 0, position: 'sticky', top: 0,
-    }}>
-      {/* Header */}
-      <div style={{
-        padding: collapsed ? '20px 12px' : '24px 20px',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        display: 'flex', alignItems: 'center', gap: '12px',
-        justifyContent: collapsed ? 'center' : 'space-between',
-      }}>
+    <aside
+      style={{
+        width: collapsed ? "80px" : "280px",
+        minHeight: "100vh",
+        backgroundColor: "#00284d", // Azul institucional profundo
+        display: "flex",
+        flexDirection: "column",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        flexShrink: 0,
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+      }}
+    >
+      {/* HEADER LOGO */}
+      <div
+        style={{
+          padding: "32px 24px",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        <div style={{ width: "40px", height: "40px", position: "relative" }}>
+          <Image
+            src="/Logo_Amarillo.png"
+            alt="Logo"
+            fill
+            style={{ objectFit: "contain" }}
+          />
+        </div>
         {!collapsed && (
           <div>
-            <p style={{ color: 'white', fontWeight: '700', fontSize: '17px', margin: 0 }}>SAPFIAI</p>
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', margin: 0 }}>Administración</p>
+            <p
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
+                margin: 0,
+              }}
+            >
+              SAPFIAI
+            </p>
+            <p
+              style={{
+                color: "#d5bb87",
+                fontSize: "10px",
+                margin: 0,
+                opacity: 0.8,
+              }}
+            >
+              Universidad de Caldas
+            </p>
           </div>
         )}
-        <button onClick={() => setCollapsed(!collapsed)} style={{
-          background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '8px',
-          color: 'white', cursor: 'pointer', width: '32px', height: '32px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px',
-          flexShrink: 0,
-        }}>
-          {collapsed ? '→' : '←'}
-        </button>
       </div>
 
-      {/* Navigation */}
-      <nav style={{ flex: 1, padding: '12px 8px' }}>
-        {NAV_ITEMS.map((item) => {
-          const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+      {/* NAVEGACIÓN */}
+      <nav style={{ flex: 1, padding: "0 16px" }}>
+        {NAV_ITEMS.map((Item) => {
+          const active = pathname === Item.href;
           return (
-            <button key={item.href} onClick={() => router.push(item.href)} style={{
-              display: 'flex', alignItems: 'center', gap: '12px',
-              width: '100%', padding: collapsed ? '12px 0' : '12px 16px',
-              justifyContent: collapsed ? 'center' : 'flex-start',
-              borderRadius: '10px', border: 'none', cursor: 'pointer',
-              backgroundColor: active ? 'rgba(255,255,255,0.15)' : 'transparent',
-              color: active ? 'white' : 'rgba(255,255,255,0.6)',
-              fontSize: collapsed ? '20px' : '14px', fontWeight: active ? '600' : '400',
-              marginBottom: '4px', transition: 'all 0.15s',
-            }}>
-              <span style={{ fontSize: '18px', flexShrink: 0 }}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
-              {!collapsed && active && (
-                <span style={{ marginLeft: 'auto', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#a5b4fc' }} />
+            <button
+              key={Item.href}
+              onClick={() => router.push(Item.href)}
+              className="group" // Usamos clase para hover de Tailwind
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                width: "100%",
+                padding: "12px 16px",
+                margin: "4px 0",
+                borderRadius: "12px",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.2s",
+                // Fondo cuando está activo
+                backgroundColor: active
+                  ? "rgba(213, 187, 135, 0.1)"
+                  : "transparent",
+                // Color de texto
+                color: active ? "#d5bb87" : "rgba(255,255,255,0.7)",
+                justifyContent: collapsed ? "center" : "flex-start",
+              }}
+            >
+              {/* Icono de Lucide con cambio de color */}
+              <Item.icon
+                size={22}
+                strokeWidth={active ? 2.5 : 1.5}
+                style={{
+                  color: active ? "#d5bb87" : "inherit",
+                  transition: "color 0.2s",
+                }}
+              />
+
+              {!collapsed && (
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: active ? "700" : "500",
+                    letterSpacing: "0.3px",
+                  }}
+                >
+                  {Item.label}
+                </span>
+              )}
+
+              {/* Flechita derecha si está activo (como el mockup) */}
+              {active && !collapsed && (
+                <div style={{ marginLeft: "auto" }}>
+                  <ChevronRight size={14} color="#d5bb87" />
+                </div>
               )}
             </button>
           );
         })}
       </nav>
 
-      {/* User footer */}
-      <div style={{
-        padding: collapsed ? '16px 8px' : '16px 20px',
-        borderTop: '1px solid rgba(255,255,255,0.1)',
-      }}>
-        {!collapsed && user && (
-          <div style={{ marginBottom: '12px' }}>
-            <p style={{ color: 'white', fontSize: '13px', fontWeight: '600', margin: '0 0 2px' }}>
-              {user.userName || user.email}
-            </p>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', margin: 0 }}>{user.email}</p>
-          </div>
-        )}
-        <button onClick={handleLogout} disabled={logingOut} style={{
-          display: 'flex', alignItems: 'center', gap: '8px',
-          width: '100%', padding: collapsed ? '10px 0' : '10px 14px',
-          justifyContent: collapsed ? 'center' : 'flex-start',
-          border: 'none', borderRadius: '8px', cursor: 'pointer',
-          backgroundColor: 'rgba(239,68,68,0.15)',
-          color: '#fca5a5', fontSize: '14px', fontWeight: '500',
-        }}>
-          <span>🚪</span>
-          {!collapsed && <span>{logingOut ? 'Cerrando...' : 'Cerrar sesión'}</span>}
+      {/* FOOTER - CERRAR SESIÓN */}
+      <div
+        style={{
+          padding: "24px",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+        }}
+      >
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            width: "100%",
+            padding: "10px",
+            background: "rgba(255,255,255,0.05)",
+            border: "none",
+            borderRadius: "8px",
+            color: "white",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {collapsed ? (
+            <ChevronRight size={20} />
+          ) : (
+            <span style={{ fontSize: "12px", opacity: 0.7 }}>←</span>
+          )}
         </button>
       </div>
     </aside>
