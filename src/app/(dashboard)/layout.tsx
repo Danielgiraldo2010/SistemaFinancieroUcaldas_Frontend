@@ -84,7 +84,9 @@ export default function DashboardLayout({
             <div className="flex items-center gap-6">
               {/* ROL BADGE */}
               <div className="hidden md:block bg-[#fdf4e7] text-[#b45309] text-[10px] font-extrabold px-4 py-1.5 rounded-full border border-[#fde68a] uppercase tracking-tighter shadow-sm">
-                ROL: {user?.role || "SUPERADMIN"}
+                ROL:{" "}
+                {((user as Record<string, unknown>)?.role as string) ||
+                  "SUPERADMIN"}
               </div>
 
               {/* PERFIL */}
