@@ -86,27 +86,30 @@ export default function Verify2FAPage() {
 
   return (
     <div
-      className="fixed inset-0 bg-cover bg-center flex items-center justify-center animate-bgSlow"
+      className="fixed inset-0 bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: "url('/image/bg-universidad.jpeg')" }}
     >
-      {/* Overlay más oscuro */}
-      <div className="absolute inset-0 bg-blue-950/60"></div>
+      {/* CAPA AZUL CRISTALINA */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 86, 179, 0.32)",
+          zIndex: 1,
+        }}
+      />
 
       <div className="relative z-10 w-full max-w-7xl flex items-center justify-between px-8">
         {/* FORMULARIO */}
-        <div className="w-full max-w-md min-h-[550px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 flex flex-col justify-center transition-all duration-300">
-          {/* Candado */}
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-100 text-3xl">
-              🔐
-            </div>
-          </div>
-
-          <h2 className="text-2xl font-semibold text-gray-800 text-center">
+        <div className="w-full max-w-md min-h-[550px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 flex flex-col justify-center">
+          <h2 className="text-2xl font-semibold text-center text-[#003e70]">
             Autenticación en Dos Pasos
           </h2>
 
-          <p className="text-gray-500 text-sm text-center mt-2">
+          <p className="text-[#64748b] text-sm text-center mt-2">
             Ingresa el código de 6 dígitos
           </p>
 
@@ -115,7 +118,7 @@ export default function Verify2FAPage() {
           </p>
 
           {error && (
-            <div className="mt-6 bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-lg animate-pulse">
+            <div className="mt-6 bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-lg">
               {error}
             </div>
           )}
@@ -167,15 +170,6 @@ export default function Verify2FAPage() {
             </button>
           </form>
 
-          <div className="text-center mt-4">
-            <button
-              type="button"
-              className="text-sm text-[#003e70] hover:underline"
-            >
-              ¿No recibiste el código?
-            </button>
-          </div>
-
           <div className="text-center mt-6">
             <a href="/login" className="text-[#003e70] text-sm hover:underline">
               Volver al inicio de sesión
@@ -183,17 +177,23 @@ export default function Verify2FAPage() {
           </div>
         </div>
 
-        {/* LOGOS DERECHA */}
-        <div className="hidden lg:flex flex-col items-center ml-16">
+        {/* LOGOS IGUAL TAMAÑO QUE LOGIN */}
+        <div className="hidden lg:flex flex-col items-start ml-16">
           <img
-            src="/image/logo-u.png"
-            alt="Universidad"
-            className="w-80 opacity-90"
+            src="/images/logo1-u-caldas.png"
+            alt="U Caldas"
+            style={{
+              width: "280px",
+              filter: "brightness(0) invert(1)",
+            }}
           />
           <img
-            src="/image/logo-ci2dt2.png"
-            alt="CIDTT"
-            className="w-40 opacity-90 mt-4"
+            src="/images/logo-cidt.png"
+            alt="CIDT"
+            style={{
+              width: "140px",
+              marginTop: "20px",
+            }}
           />
         </div>
       </div>
