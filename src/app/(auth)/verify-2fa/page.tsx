@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/presentation/store/authStore";
@@ -13,6 +14,8 @@ function Verify2FAContent() {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+
   const refs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
 
   const handleChange = (i: number, val: string) => {
@@ -23,23 +26,13 @@ function Verify2FAContent() {
     if (val && i < 5) refs[i + 1].current?.focus();
   };
 
-  const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !code[i] && i > 0)
+  const handleKeyDown = (
+    i: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Backspace" && !code[i] && i > 0) {
       refs[i - 1].current?.focus();
-  };
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    const pasted = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, 6);
-
-    const next = [...code];
-    pasted.split("").forEach((c, i) => {
-      next[i] = c;
-    });
-
-    setCode(next);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,7 +46,6 @@ function Verify2FAContent() {
 
     setLoading(true);
     setError("");
-    setStatus(AuthStatus.Loading);
 
     try {
       const response = await authService.verify2FA({
@@ -66,139 +58,164 @@ function Verify2FAContent() {
         setStatus(AuthStatus.Authenticated);
         router.push("/dashboard");
       } else {
-        setError(
-          response.message ||
-            response.errors?.join(", ") ||
-            "Código inválido o expirado",
-        );
+        setError("Código inválido o expirado");
         setStatus(AuthStatus.Unauthenticated);
       }
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Error de verificación";
-      setError(message);
+    } catch {
+      setError("Error de verificación");
       setStatus(AuthStatus.Unauthenticated);
     } finally {
       setLoading(false);
     }
   };
 
-  const isCodeComplete = code.join("").length === 6;
-
   return (
-    <div
-      className="fixed inset-0 bg-cover bg-center flex items-center justify-center animate-bgSlow"
-      style={{ backgroundImage: "url('/image/bg-universidad.jpeg')" }}
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
     >
-      {/* Overlay más oscuro */}
-      <div className="absolute inset-0 bg-blue-950/60"></div>
-
-      <div className="relative z-10 w-full max-w-7xl flex items-center justify-between px-8">
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1100px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {/* FORMULARIO */}
-        <div className="w-full max-w-md min-h-[550px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 flex flex-col justify-center transition-all duration-300">
-          {/* Candado */}
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-100 text-3xl">
-              🔐
-            </div>
-          </div>
-
-          <h2 className="text-2xl font-semibold text-gray-800 text-center">
+        <div
+          style={{
+            width: "380px",
+            minHeight: "550px",
+            backgroundColor: "white",
+            borderRadius: "24px",
+            padding: "40px",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "26px",
+              fontWeight: 800,
+              color: "#003e70",
+              textAlign: "center",
+            }}
+          >
             Autenticación en Dos Pasos
           </h2>
 
-          <p className="text-gray-500 text-sm text-center mt-2">
-            Ingresa el código de 6 dígitos
-          </p>
-
-          <p className="text-xs text-gray-400 text-center mt-2">
-            Nunca compartas este código con nadie.
+          <p
+            style={{
+              color: "#64748b",
+              fontSize: "14px",
+              marginTop: "10px",
+              textAlign: "center",
+            }}
+          >
+            Ingresa el código de 6 dígitos, enviado a tu correo electrónico.
           </p>
 
           {error && (
-            <div className="mt-6 bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-lg animate-pulse">
+            <div
+              style={{
+                color: "#dc2626",
+                marginTop: "20px",
+                textAlign: "center",
+              }}
+            >
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-8">
-            <div className="flex justify-center gap-3" onPaste={handlePaste}>
+          <form onSubmit={handleSubmit} style={{ marginTop: "30px" }}>
+            <div
+              style={{ display: "flex", gap: "10px", justifyContent: "center" }}
+            >
               {code.map((digit, i) => (
                 <input
                   key={i}
                   ref={refs[i]}
                   type="text"
-                  inputMode="numeric"
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handleChange(i, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(i, e)}
-                  className={`
-                    w-12 h-14 text-center text-xl font-bold rounded-xl
-                    border-2 transition-all duration-200
-                    ${
-                      error
-                        ? "border-red-400 bg-red-50"
-                        : digit
-                          ? "border-[#003e70] bg-blue-50"
-                          : "border-gray-300 bg-gray-50"
-                    }
-                    focus:outline-none 
-                    focus:border-[#003e70]
-                    focus:ring-2 
-                    focus:ring-[#003e70]/30
-                  `}
+                  onFocus={() => setFocusedIndex(i)}
+                  onBlur={() => setFocusedIndex(null)}
+                  style={{
+                    width: "45px",
+                    height: "55px",
+                    textAlign: "center",
+                    fontSize: "20px",
+                    borderRadius: "10px",
+                    border:
+                      focusedIndex === i
+                        ? "2px solid #003e70"
+                        : "1px solid #ccc",
+                    outline: "none",
+                  }}
                 />
               ))}
             </div>
 
             <button
               type="submit"
-              disabled={loading || !isCodeComplete}
-              className={`
-                w-full mt-8 py-3 rounded-xl font-semibold text-white transition-all duration-200
-                ${
-                  loading || !isCodeComplete
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-[#003e70] to-[#002c4f] hover:brightness-110"
-                }
-              `}
+              disabled={loading}
+              style={{
+                width: "100%",
+                marginTop: "30px",
+                padding: "15px",
+                background: "#003e70",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                fontWeight: 800,
+              }}
             >
               {loading ? "Verificando..." : "Verificar código"}
             </button>
           </form>
-
-          <div className="text-center mt-4">
-            <button
-              type="button"
-              className="text-sm text-[#003e70] hover:underline"
-            >
-              ¿No recibiste el código?
-            </button>
-          </div>
-
-          <div className="text-center mt-6">
-            <a href="/login" className="text-[#003e70] text-sm hover:underline">
-              Volver al inicio de sesión
-            </a>
-          </div>
         </div>
 
         {/* LOGOS DERECHA */}
-        <div className="hidden lg:flex flex-col items-center ml-16">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: "30px",
+            zIndex: 10,
+          }}
+        >
           <img
-            src="/image/logo-u.png"
-            alt="Universidad"
-            className="w-80 opacity-90"
+            src="/images/logo1-u-caldas.png"
+            alt="U Caldas"
+            style={{
+              width: "280px",
+              filter:
+                "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
+            }}
           />
           <img
-            src="/image/logo-ci2dt2.png"
-            alt="CIDTT"
-            className="w-40 opacity-90 mt-4"
+            src="/images/logo-cidt.png"
+            alt="CIDT"
+            style={{
+              width: "140px",
+              filter:
+                "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
+            }}
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
