@@ -5,7 +5,6 @@ import { AuthGuard } from "@/infrastructure/guards/AuthGuard";
 import { Sidebar } from "@/presentation/components/layout/Sidebar";
 import {
   LogOut,
-  Key,
   User,
   ChevronDown,
   LayoutDashboard,

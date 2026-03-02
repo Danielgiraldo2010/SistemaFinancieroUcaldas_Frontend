@@ -4,8 +4,9 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/presentation/store/authStore";
 import { authService } from "@/infrastructure/api/auth/AuthService";
 import { AuthStatus } from "@/core/domain/enums";
+import { GuestGuard } from "@/infrastructure/guards";
 
-export default function Verify2FAPage() {
+function Verify2FAContent() {
   const router = useRouter();
   const { setUser, setStatus, pendingTwoFAToken } = useAuthStore();
 
@@ -198,5 +199,13 @@ export default function Verify2FAPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Verify2FAPage() {
+  return (
+    <GuestGuard>
+      <Verify2FAContent />
+    </GuestGuard>
   );
 }

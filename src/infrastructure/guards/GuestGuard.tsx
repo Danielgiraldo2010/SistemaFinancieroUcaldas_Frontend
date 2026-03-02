@@ -2,6 +2,7 @@
 import { useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/presentation/store/authStore';
+import { LoadingOverlay } from './LoadingOverlay';
 
 interface GuestGuardProps {
   children: ReactNode;
@@ -21,6 +22,12 @@ export function GuestGuard({ children }: GuestGuardProps) {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  if (isLoading || isAuthenticated) return null;
+  // Mientras está cargando, muestra un loader
+  if (isLoading) return <LoadingOverlay />;
+
+  // Si el usuario ya está autenticado, no muestra nada (se redirige)
+  if (isAuthenticated) return null;
+
+  // Si no está autenticado y no está cargando, muestra el contenido
   return <>{children}</>;
 }

@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/presentation/store/authStore';
 import { authService } from '@/infrastructure/api/auth/AuthService';
 import { AuthStatus } from '@/core/domain/enums';
+import { GuestGuard } from '@/infrastructure/guards';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const { setUser, setStatus, setPendingTwoFAToken } = useAuthStore();
   
@@ -146,5 +147,13 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <GuestGuard>
+      <LoginContent />
+    </GuestGuard>
   );
 }
