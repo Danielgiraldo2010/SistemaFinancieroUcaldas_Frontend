@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/presentation/store/authStore";
 import { authService } from "@/infrastructure/api/auth/AuthService";
 import { AuthStatus } from "@/core/domain/enums";
+import { Input } from "@/presentation/components/ui/Input";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,7 +15,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPass, setShowPass] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,177 +45,88 @@ export default function LoginPage() {
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
+      {/* Fondo animado */}
       <div
-        style={{
-          width: "100%",
-          maxWidth: "1100px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "30px",
-            zIndex: 10,
-          }}
-        >
+        className="absolute inset-0 bg-cover bg-center filter brightness-50 animate-[moveBackground_60s_linear_infinite]"
+        style={{ backgroundImage: 'url("/images/fondo-login.jpg")' }}
+      />
+      <style>{`
+        @keyframes moveBackground {
+          0% { background-position: 0% 0%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 0%; }
+        }
+      `}</style>
+
+      <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center gap-10">
+        {/* Logos siempre en horizontal */}
+        <div className="flex flex-row gap-6 items-center">
           <img
             src="/images/logo1-u-caldas.png"
             alt="U Caldas"
-            style={{
-              width: "280px",
-              filter:
-                "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
-            }}
+            className="w-56 md:w-72 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] invert brightness-0"
           />
           <img
             src="/images/logo-cidt.png"
             alt="CIDT"
-            style={{
-              width: "140px",
-              filter:
-                "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
-            }}
+            className="w-28 md:w-36 drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] invert brightness-0"
           />
         </div>
 
-        <div
-          style={{
-            width: "380px",
-            minHeight: "550px",
-            backgroundColor: "white",
-            borderRadius: "24px",
-            padding: "40px",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ marginBottom: "25px" }}>
-            <h2
-              style={{
-                fontSize: "26px",
-                fontWeight: "800",
-                color: "#003e70",
-                margin: 0,
-              }}
-            >
+        {/* Card */}
+        <div className="w-full max-w-sm bg-white/95 rounded-2xl p-8 sm:p-10 shadow-xl flex flex-col">
+          <div className="mb-6">
+            <h2 className="text-2xl font-extrabold text-ucaldas-blue">
               Acceso Seguro
             </h2>
-            <p style={{ color: "#64748b", fontSize: "14px", marginTop: "6px" }}>
+            <p className="text-gray-500 text-sm mt-1">
               Sistema Financiero Sapfiai
             </p>
           </div>
 
           {error && (
-            <div
-              style={{
-                color: "#dc2626",
-                marginBottom: "15px",
-                fontSize: "13px",
-              }}
-            >
+            <div className="bg-red-100 text-red-600 px-3 py-2 rounded mb-4 text-sm">
               ⚠️ {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: "18px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  color: "#475569",
-                  marginBottom: "5px",
-                }}
-              >
-                Correo Institucional
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  outline: "none",
-                }}
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Input
+              label="Correo Institucional"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="usuario@ucaldas.edu.co"
+              error={error.includes("Correo") ? error : undefined}
+            />
+            <Input
+              label="Contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              error={error.includes("Contraseña") ? error : undefined}
+            />
 
-            <div style={{ marginBottom: "25px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  color: "#475569",
-                  marginBottom: "5px",
-                }}
+            {/* Olvidó contraseña */}
+            <div className="text-right">
+              <a
+                href="/forgot-password"
+                className="text-sm text-ucaldas-blue hover:underline"
               >
-                Contraseña
-              </label>
-
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showPass ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    border: "1px solid #cbd5e1",
-                    outline: "none",
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  style={{
-                    position: "absolute",
-                    right: "12px",
-                    top: "12px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#94a3b8",
-                  }}
-                >
-                  👁
-                </button>
-              </div>
+                ¿Olvidó su contraseña?
+              </a>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              style={{
-                width: "100%",
-                padding: "15px",
-                background: "#003e70",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                fontWeight: "800",
-              }}
+              className={`mt-3 py-3 rounded-xl font-bold text-white transition-all ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-ucaldas-blue hover:bg-blue-800"
+              }`}
             >
               {loading ? "Validando..." : "Iniciar Sesión"}
             </button>
