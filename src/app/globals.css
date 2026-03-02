@@ -14,46 +14,21 @@ body {
     sans-serif;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes bgSlowMove {
+@keyframes bgFloat {
   0% {
-    background-position: center;
     transform: scale(1);
+    background-position: center;
   }
   50% {
+    transform: scale(1.02);
     background-position: center top;
-    transform: scale(1.03);
   }
   100% {
-    background-position: center;
     transform: scale(1);
+    background-position: center;
   }
 }
 
-.animate-bgSlow {
-  animation: bgSlowMove 20s ease-in-out infinite;
+.animate-bgFloat {
+  animation: bgFloat 25s ease-in-out infinite;
 }
