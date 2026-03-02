@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 interface NavItem {
-  icon: any; // Cambiamos de string a componente
+  icon: any;
   label: string;
   href: string;
 }
@@ -47,7 +47,7 @@ export function Sidebar() {
         zIndex: 50,
       }}
     >
-      {/* HEADER LOGO */}
+      {/* HEADER LOGO - CORREGIDO */}
       <div
         style={{
           padding: "32px 24px",
@@ -58,10 +58,11 @@ export function Sidebar() {
       >
         <div style={{ width: "40px", height: "40px", position: "relative" }}>
           <Image
-            src="/Logo_Amarillo.png"
-            alt="Logo"
+            src="/images/logo1ucaldas.png" // RUTA CORREGIDA: Apunta a public/images/logo1-u-caldas.png
+            alt="Logo SAPFIAI"
             fill
             style={{ objectFit: "contain" }}
+            priority // Añadido para mejorar la carga del logo
           />
         </div>
         {!collapsed && (
@@ -98,7 +99,7 @@ export function Sidebar() {
             <button
               key={Item.href}
               onClick={() => router.push(Item.href)}
-              className="group" // Usamos clase para hover de Tailwind
+              className="group"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -110,16 +111,13 @@ export function Sidebar() {
                 border: "none",
                 cursor: "pointer",
                 transition: "all 0.2s",
-                // Fondo cuando está activo
                 backgroundColor: active
                   ? "rgba(213, 187, 135, 0.1)"
                   : "transparent",
-                // Color de texto
                 color: active ? "#d5bb87" : "rgba(255,255,255,0.7)",
                 justifyContent: collapsed ? "center" : "flex-start",
               }}
             >
-              {/* Icono de Lucide con cambio de color */}
               <Item.icon
                 size={22}
                 strokeWidth={active ? 2.5 : 1.5}
@@ -141,7 +139,6 @@ export function Sidebar() {
                 </span>
               )}
 
-              {/* Flechita derecha si está activo (como el mockup) */}
               {active && !collapsed && (
                 <div style={{ marginLeft: "auto" }}>
                   <ChevronRight size={14} color="#d5bb87" />
@@ -152,7 +149,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* FOOTER - CERRAR SESIÓN */}
+      {/* FOOTER - COLLAPSE */}
       <div
         style={{
           padding: "24px",

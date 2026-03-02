@@ -63,7 +63,7 @@ export default function LoginPage() {
         {/* Logos siempre en horizontal */}
         <div className="flex flex-row gap-6 items-center">
           <img
-            src="/images/logo1-u-caldas.png"
+            src="/images/logo1ucaldas.png"
             alt="U Caldas"
             className="w-56 md:w-72 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] invert brightness-0"
           />

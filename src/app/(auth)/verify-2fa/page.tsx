@@ -38,21 +38,17 @@ function Verify2FAContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const fullCode = code.join("");
-
     if (fullCode.length !== 6) {
       setError("Ingresa el código completo");
       return;
     }
-
     setLoading(true);
     setError("");
-
     try {
       const response = await authService.verify2FA({
         code: fullCode,
         token: pendingTwoFAToken ?? undefined,
       });
-
       if (response.success && response.user) {
         setUser(response.user);
         setStatus(AuthStatus.Authenticated);
@@ -70,152 +66,253 @@ function Verify2FAContent() {
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "1100px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* FORMULARIO */}
-        <div
-          style={{
-            width: "380px",
-            minHeight: "550px",
-            backgroundColor: "white",
-            borderRadius: "24px",
-            padding: "40px",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "26px",
-              fontWeight: 800,
-              color: "#003e70",
-              textAlign: "center",
-            }}
-          >
-            Autenticación en Dos Pasos
-          </h2>
+    <>
+      <style>{`
+        .verify-wrapper {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px 16px;
+        }
 
-          <p
-            style={{
-              color: "#64748b",
-              fontSize: "14px",
-              marginTop: "10px",
-              textAlign: "center",
-            }}
-          >
-            Ingresa el código de 6 dígitos, enviado a tu correo electrónico.
-          </p>
+        /* DESKTOP: card izquierda, logos derecha */
+        .verify-inner {
+          width: 100%;
+          max-width: 1100px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 40px;
+        }
 
-          {error && (
-            <div
+        .verify-card {
+          width: 100%;
+          max-width: 384px;
+          background: white;
+          border-radius: 16px;
+          padding: 40px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Logos desktop (derecha, horizontal) */
+        .logos-desktop {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 24px;
+        }
+
+        /* Logos móvil (ocultos en desktop) */
+        .logo-mobile-top,
+        .logo-mobile-bottom {
+          display: none;
+        }
+
+        /* TABLET */
+        @media (max-width: 1024px) {
+          .verify-inner {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .logos-desktop {
+            display: none;
+          }
+
+          .logo-mobile-top {
+            display: flex;
+            justify-content: center;
+          }
+
+          .logo-mobile-bottom {
+            display: flex;
+            justify-content: center;
+          }
+
+          .verify-card {
+            max-width: 420px;
+          }
+        }
+
+        /* MÓVIL */
+        @media (max-width: 640px) {
+          .verify-wrapper {
+            padding: 20px 16px;
+          }
+
+          .verify-inner {
+            gap: 24px;
+          }
+
+          .verify-card {
+            padding: 32px 24px;
+            max-width: 100%;
+          }
+
+          .code-input {
+            width: 42px !important;
+            height: 50px !important;
+            font-size: 20px !important;
+          }
+        }
+      `}</style>
+
+      <main className="verify-wrapper">
+        <div className="verify-inner">
+          {/* LOGO ARRIBA (móvil/tablet) - CIDT */}
+          <div className="logo-mobile-top">
+            <img
+              src="/images/logo-cidt.png"
+              alt="CIDT"
               style={{
-                color: "#dc2626",
-                marginTop: "20px",
-                textAlign: "center",
+                width: "100px",
+                filter:
+                  "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
               }}
-            >
-              {error}
-            </div>
-          )}
+            />
+          </div>
 
-          <form onSubmit={handleSubmit} style={{ marginTop: "30px" }}>
-            <div
-              style={{ display: "flex", gap: "10px", justifyContent: "center" }}
-            >
-              {code.map((digit, i) => (
-                <input
-                  key={i}
-                  ref={refs[i]}
-                  type="text"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleChange(i, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(i, e)}
-                  onFocus={() => setFocusedIndex(i)}
-                  onBlur={() => setFocusedIndex(null)}
-                  style={{
-                    width: "45px",
-                    height: "55px",
-                    textAlign: "center",
-                    fontSize: "20px",
-                    borderRadius: "10px",
-                    border:
-                      focusedIndex === i
-                        ? "2px solid #003e70"
-                        : "1px solid #ccc",
-                    outline: "none",
-                  }}
-                />
-              ))}
+          {/* CARD */}
+          <div className="verify-card">
+            <div style={{ marginBottom: "24px" }}>
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: 800,
+                  color: "#003e70",
+                  margin: "0 0 6px 0",
+                }}
+              >
+                Autenticación en Dos Pasos
+              </h2>
+              <p style={{ color: "#6b7280", fontSize: "14px", margin: 0 }}>
+                Ingresa el código de 6 dígitos enviado a tu correo electrónico.
+              </p>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
+            {error && (
+              <div
+                style={{
+                  backgroundColor: "#fee2e2",
+                  color: "#dc2626",
+                  padding: "8px 12px",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  marginBottom: "16px",
+                }}
+              >
+                ⚠️ {error}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  justifyContent: "center",
+                  margin: "16px 0",
+                }}
+              >
+                {code.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={refs[i]}
+                    type="text"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleChange(i, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(i, e)}
+                    onFocus={() => setFocusedIndex(i)}
+                    onBlur={() => setFocusedIndex(null)}
+                    className="code-input"
+                    style={{
+                      width: "48px",
+                      height: "56px",
+                      textAlign: "center",
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      borderRadius: "10px",
+                      border:
+                        focusedIndex === i
+                          ? "2px solid #003e70"
+                          : "1.5px solid #d1d5db",
+                      outline: "none",
+                      color: "#003e70",
+                      transition: "border 0.2s",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div style={{ height: "8px" }} />
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: loading ? "#9ca3af" : "#003e70",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: 700,
+                  fontSize: "16px",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  transition: "background 0.2s",
+                }}
+              >
+                {loading ? "Verificando..." : "Verificar código"}
+              </button>
+            </form>
+          </div>
+
+          {/* LOGO ABAJO (móvil/tablet) - U. Caldas */}
+          <div className="logo-mobile-bottom">
+            <img
+              src="/images/logo1ucaldas.png"
+              alt="U Caldas"
               style={{
-                width: "100%",
-                marginTop: "30px",
-                padding: "15px",
-                background: "#003e70",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                fontWeight: 800,
+                width: "200px",
+                filter:
+                  "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
               }}
-            >
-              {loading ? "Verificando..." : "Verificar código"}
-            </button>
-          </form>
-        </div>
+            />
+          </div>
 
-        {/* LOGOS DERECHA */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "30px",
-            zIndex: 10,
-          }}
-        >
-          <img
-            src="/images/logo1-u-caldas.png"
-            alt="U Caldas"
-            style={{
-              width: "280px",
-              filter:
-                "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
-            }}
-          />
-          <img
-            src="/images/logo-cidt.png"
-            alt="CIDT"
-            style={{
-              width: "140px",
-              filter:
-                "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
-            }}
-          />
+          {/* LOGOS DESKTOP (derecha) */}
+          <div className="logos-desktop">
+            <img
+              src="/images/logo-cidt.png"
+              alt="CIDT"
+              style={{
+                width: "120px",
+                filter:
+                  "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
+              }}
+            />
+            <img
+              src="/images/logo1ucaldas.png"
+              alt="U Caldas"
+              style={{
+                width: "260px",
+                filter:
+                  "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 
