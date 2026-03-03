@@ -20,18 +20,12 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError("");
     try {
-      // Ajustado a la interfaz Result de tu Swagger/Service
       const res = await authService.forgotPassword({ email });
 
-      // Nota: En tu Swagger el objeto es 'Result', verifica si usa 'succeeded' o 'success'
-      if (res.success || (res as any).succeeded) {
+      if (res.succeeded) {
         setSent(true);
       } else {
-        setError(
-          res.message ||
-            res.errors?.join(", ") ||
-            "No se pudo enviar el correo",
-        );
+        setError(res.errors?.join(", ") || "No se pudo enviar el correo");
       }
     } catch {
       setError("Error de conexión con el servidor");
