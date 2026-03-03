@@ -6,6 +6,7 @@ import { useAuthStore } from "@/presentation/store/authStore";
 import { authService } from "@/infrastructure/api/auth/AuthService";
 import { AuthStatus } from "@/core/domain/enums";
 import { Input } from "@/presentation/components/ui/Input";
+import { AuthCard } from "@/presentation/components/ui/AuthCard";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="w-full max-w-sm bg-white/95 rounded-2xl p-8 sm:p-10 shadow-xl flex flex-col">
+        <AuthCard>
           <div className="mb-6">
             <h2 className="text-2xl font-extrabold text-ucaldas-blue">
               Acceso Seguro
@@ -131,7 +132,7 @@ export default function LoginPage() {
               {loading ? "Validando..." : "Iniciar Sesión"}
             </button>
           </form>
-        </div>
+        </AuthCard>
       </div>
     </main>
   );

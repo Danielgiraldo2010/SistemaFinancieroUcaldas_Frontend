@@ -1,79 +1,146 @@
-'use client';
-import { useState } from 'react';
-import { authService } from '@/infrastructure/api/auth/AuthService';
+"use client";
+import { useState } from "react";
+import { authService } from "@/infrastructure/api/auth/AuthService";
+import { AuthCard } from "@/presentation/components/ui/AuthCard";
+import { Input } from "@/presentation/components/ui/Input";
+import Link from "next/link";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail]   = useState('');
-  const [sent, setSent]     = useState(false);
-  const [error, setError]   = useState('');
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) { setError('Introduce tu email'); return; }
-    setLoading(true); setError('');
+    if (!email.trim()) {
+      setError("Introduce tu email");
+      return;
+    }
+    setLoading(true);
+    setError("");
     try {
+      // Ajustado a la interfaz Result de tu Swagger/Service
       const res = await authService.forgotPassword({ email });
-      if (res.succeeded) setSent(true);
-      else setError(res.errors?.join(', ') || 'No se pudo enviar el correo');
-    } catch { setError('Error de conexión'); }
-    finally { setLoading(false); }
-  };
 
-  const card: React.CSSProperties = {
-    backgroundColor: 'white', borderRadius: '20px',
-    boxShadow: '0 25px 60px rgba(0,0,0,0.25)',
-    padding: '44px 40px 36px',
+      // Nota: En tu Swagger el objeto es 'Result', verifica si usa 'succeeded' o 'success'
+      if (res.success || (res as any).succeeded) {
+        setSent(true);
+      } else {
+        setError(
+          res.message ||
+            res.errors?.join(", ") ||
+            "No se pudo enviar el correo",
+        );
+      }
+    } catch {
+      setError("Error de conexión con el servidor");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  if (sent) return (
-    <div style={card}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '52px', marginBottom: '16px' }}>📧</div>
-        <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#111827', margin: '0 0 8px' }}>Correo enviado</h2>
-        <p style={{ color: '#6b7280', fontSize: '15px', marginBottom: '24px' }}>
-          Si el email existe en el sistema, recibirás instrucciones de recuperación.
-        </p>
-        <a href="/login" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}>← Volver al login</a>
-      </div>
-    </div>
-  );
 
   return (
-    <div style={card}>
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-        <div style={{ fontSize: '52px', marginBottom: '12px' }}>🔑</div>
-        <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 6px' }}>Recuperar contraseña</h2>
-        <p style={{ color: '#6b7280', fontSize: '14px', margin: 0 }}>Introduce tu email y te enviaremos instrucciones</p>
-      </div>
-      {error && (
-        <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', padding: '12px 16px', marginBottom: '20px', color: '#dc2626', fontSize: '14px' }}>
-          ⚠️ {error}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
-            Correo electrónico
-          </label>
-          <input
-            type="email" required value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            style={{ width: '100%', padding: '13px 16px', fontSize: '15px', border: '2px solid #e5e7eb', borderRadius: '12px', outline: 'none', backgroundColor: '#fafafa', color: '#111827' }}
+    <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
+      {/* Fondo Animado Institucional */}
+      <div
+        className="absolute inset-0 bg-cover bg-center filter brightness-50 animate-[moveBackground_60s_linear_infinite]"
+        style={{ backgroundImage: 'url("/images/fondo-login.jpg")' }}
+      />
+      <style>{`
+        @keyframes moveBackground {
+          0% { background-position: 0% 0%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 0%; }
+        }
+      `}</style>
+
+      <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center gap-10">
+        {/* Logos adaptados al diseño responsivo que aprobaste */}
+        <div className="flex flex-row gap-6 items-center">
+          <img
+            src="/images/logo1ucaldas.png"
+            alt="U Caldas"
+            className="w-56 md:w-72 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] invert brightness-0"
+          />
+          <img
+            src="/images/logo-cidt.png"
+            alt="CIDT"
+            className="w-28 md:w-36 drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] invert brightness-0"
           />
         </div>
-        <button type="submit" disabled={loading} style={{
-          width: '100%', padding: '14px', fontSize: '16px', fontWeight: '700', color: 'white',
-          background: loading ? '#d1d5db' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer',
-        }}>
-          {loading ? '⏳ Enviando...' : '→ Enviar instrucciones'}
-        </button>
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <a href="/login" style={{ color: '#667eea', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>← Volver al login</a>
-        </div>
-      </form>
-    </div>
+
+        <AuthCard>
+          {sent ? (
+            <div className="text-center py-4">
+              <div className="text-5xl mb-4 text-green-500">📧</div>
+              <h2 className="text-2xl font-extrabold text-ucaldas-blue mb-2">
+                Correo enviado
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                Si el email <span className="font-semibold">{email}</span>{" "}
+                existe en el sistema, recibirás instrucciones de recuperación.
+              </p>
+              <Link
+                href="/login"
+                className="text-ucaldas-blue font-bold hover:underline"
+              >
+                ← Volver al login
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div className="mb-6">
+                <div className="text-4xl mb-2">🔑</div>
+                <h2 className="text-2xl font-extrabold text-ucaldas-blue">
+                  Recuperar contraseña
+                </h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  Introduce tu correo institucional para recibir instrucciones.
+                </p>
+              </div>
+
+              {error && (
+                <div className="bg-red-100 border border-red-200 text-red-600 px-3 py-2 rounded-xl mb-4 text-sm flex items-center gap-2">
+                  <span>⚠️</span> {error}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <Input
+                  label="Correo electrónico"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="usuario@ucaldas.edu.co"
+                />
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`mt-2 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${
+                    loading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-ucaldas-blue hover:bg-blue-800"
+                  }`}
+                >
+                  {loading ? "⏳ Enviando..." : "→ Enviar instrucciones"}
+                </button>
+
+                <div className="text-center mt-4">
+                  <Link
+                    href="/login"
+                    className="text-sm text-gray-500 hover:text-ucaldas-blue font-medium transition-colors"
+                  >
+                    ← Volver al inicio de sesión
+                  </Link>
+                </div>
+              </form>
+            </>
+          )}
+        </AuthCard>
+      </div>
+    </main>
   );
 }

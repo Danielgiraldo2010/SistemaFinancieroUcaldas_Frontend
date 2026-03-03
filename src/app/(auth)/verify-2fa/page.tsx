@@ -6,6 +6,7 @@ import { useAuthStore } from "@/presentation/store/authStore";
 import { authService } from "@/infrastructure/api/auth/AuthService";
 import { AuthStatus } from "@/core/domain/enums";
 import { GuestGuard } from "@/infrastructure/guards";
+import { AuthCard } from "@/presentation/components/ui/AuthCard";
 
 function Verify2FAContent() {
   const router = useRouter();
@@ -87,17 +88,6 @@ function Verify2FAContent() {
           gap: 40px;
         }
 
-        .verify-card {
-          width: 100%;
-          max-width: 384px;
-          background: white;
-          border-radius: 16px;
-          padding: 40px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-          display: flex;
-          flex-direction: column;
-        }
-
         /* Logos desktop (derecha, horizontal) */
         .logos-desktop {
           display: flex;
@@ -134,9 +124,6 @@ function Verify2FAContent() {
             justify-content: center;
           }
 
-          .verify-card {
-            max-width: 420px;
-          }
         }
 
         /* MÓVIL */
@@ -147,11 +134,6 @@ function Verify2FAContent() {
 
           .verify-inner {
             gap: 24px;
-          }
-
-          .verify-card {
-            padding: 32px 24px;
-            max-width: 100%;
           }
 
           .code-input {
@@ -178,7 +160,7 @@ function Verify2FAContent() {
           </div>
 
           {/* CARD */}
-          <div className="verify-card">
+          <AuthCard>
             <div style={{ marginBottom: "24px" }}>
               <h2
                 style={{
@@ -274,7 +256,7 @@ function Verify2FAContent() {
                 {loading ? "Verificando..." : "Verificar código"}
               </button>
             </form>
-          </div>
+          </AuthCard>
 
           {/* LOGO ABAJO (móvil/tablet) - U. Caldas */}
           <div className="logo-mobile-bottom">
