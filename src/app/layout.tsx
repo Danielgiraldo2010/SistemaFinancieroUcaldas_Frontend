@@ -1,15 +1,19 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'SAPFIAI — Sistema de Administración',
-  description: 'Plataforma de administración SAPFIAI',
+  title: "SAPFIAI — Sistema de Administración",
+  description: "Plataforma de administración SAPFIAI",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="es">
-      <body style={{ backgroundColor: '#f9fafb', minHeight: '100vh' }}>
+      <body style={{ backgroundColor: "#0f172a", minHeight: "100vh" }}>
         {children}
       </body>
     </html>
