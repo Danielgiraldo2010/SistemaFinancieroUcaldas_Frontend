@@ -23,6 +23,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         style={{
           position: "fixed",
           inset: 0,
+          backgroundColor: "#0f172a",
           backgroundImage: "url('/images/bg-universidad.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",

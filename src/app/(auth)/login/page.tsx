@@ -47,19 +47,6 @@ export default function LoginPage() {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
-      {/* Fondo animado */}
-      <div
-        className="absolute inset-0 bg-cover bg-center filter brightness-50 animate-[moveBackground_60s_linear_infinite]"
-        style={{ backgroundImage: 'url("/images/fondo-login.jpg")' }}
-      />
-      <style>{`
-        @keyframes moveBackground {
-          0% { background-position: 0% 0%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 0%; }
-        }
-      `}</style>
-
       <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center gap-10">
         {/* Logos siempre en horizontal */}
         <div className="flex flex-row gap-6 items-center">
