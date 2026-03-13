@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = 'https://cidt.runasp.net';
+const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? 'https://cidt.runasp.net').replace(/\/$/, '');
+
+const buildHeaders = (request: NextRequest) => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  const authorization = request.headers.get('authorization');
+  if (authorization) headers.Authorization = authorization;
+
+  return headers;
+};
 
 export async function POST(
   request: NextRequest,
@@ -15,9 +26,7 @@ export async function POST(
     
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: buildHeaders(request),
       body: JSON.stringify(body),
     });
 
@@ -42,9 +51,7 @@ export async function GET(
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: buildHeaders(request),
     });
 
     const data = await response.json();
@@ -70,9 +77,7 @@ export async function PUT(
     
     const response = await fetch(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: buildHeaders(request),
       body: JSON.stringify(body),
     });
 
@@ -97,9 +102,7 @@ export async function DELETE(
   try {
     const response = await fetch(url, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: buildHeaders(request),
     });
 
     const data = await response.json();

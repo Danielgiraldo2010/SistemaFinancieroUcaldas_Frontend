@@ -1,10 +1,10 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { tokenManager } from './token-manager';
-import { env } from '@/config';
 
 export class ApiClient {
   private static instance: ApiClient;
   private client: AxiosInstance;
+  private static readonly INTERNAL_PROXY_BASE_URL = '/api/backend';
 
   constructor(baseURL: string) {
     this.client = axios.create({
@@ -44,8 +44,8 @@ export class ApiClient {
 
   static getInstance(): ApiClient {
     if (!ApiClient.instance) {
-      // Peticiones directas al backend usando la URL de configuración
-      ApiClient.instance = new ApiClient(env.backendUrl);
+      // Usar proxy interno evita CORS en el navegador.
+      ApiClient.instance = new ApiClient(ApiClient.INTERNAL_PROXY_BASE_URL);
     }
     return ApiClient.instance;
   }
