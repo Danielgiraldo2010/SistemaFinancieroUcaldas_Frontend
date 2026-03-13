@@ -1,7 +1,8 @@
 import {
   IpBlackList, BlockIpCommand, UnblockIpCommand,
-  UnlockAccountCommand, Result,
-} from '../types';
+  UnlockAccountCommand,
+} from './security.types';
+import { Result } from './common.types';
 
 export interface ISecurityRepository {
   getBlockedIps(activeOnly?: boolean): Promise<IpBlackList[]>;

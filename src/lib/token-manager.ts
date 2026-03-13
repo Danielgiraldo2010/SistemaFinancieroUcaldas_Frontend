@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import { env } from '@/config';
 
 const ACCESS_TOKEN_KEY  = 'sapfiai_access_token';
 const REFRESH_TOKEN_KEY = 'sapfiai_refresh_token';
@@ -44,7 +45,7 @@ export class TokenManager {
     if (!refreshToken) throw new Error('No refresh token available');
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/Authentication/refresh-token`,
+      `${env.backendUrl}/api/Authentication/refresh-token`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
