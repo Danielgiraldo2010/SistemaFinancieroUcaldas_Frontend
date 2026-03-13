@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { authService } from '@/infrastructure/api/auth/AuthService';
-import { AuditLogDto } from '@/core/domain/types';
+import { authService } from '@/services';
+import { AuditLogDto } from '@/core';
 import { format } from 'date-fns';
 
 export default function AuditLogsPage() {

@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
-import { authService } from "@/infrastructure/api/auth/AuthService";
-import { AuthCard } from "@/presentation/components/ui/AuthCard";
-import { Input } from "@/presentation/components/ui/Input";
+import { authService } from "@/services";
+import { AuthCard, Input } from "@/components/ui";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {

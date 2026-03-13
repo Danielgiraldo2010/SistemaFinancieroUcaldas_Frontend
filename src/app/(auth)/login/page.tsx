@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/presentation/store/authStore";
-import { authService } from "@/infrastructure/api/auth/AuthService";
-import { AuthStatus } from "@/core/domain/enums";
-import { Input } from "@/presentation/components/ui/Input";
-import { AuthCard } from "@/presentation/components/ui/AuthCard";
+import { useAuthStore } from "@/store";
+import { authService } from "@/services";
+import { AuthStatus } from "@/core";
+import { Input, AuthCard } from "@/components/ui";
 
 export default function LoginPage() {
   const router = useRouter();

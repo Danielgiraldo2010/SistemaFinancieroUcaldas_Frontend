@@ -1,5 +1,5 @@
 'use client';
-import { useAuthStore } from '@/presentation/store/authStore';
+import { useAuthStore } from '@/store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 

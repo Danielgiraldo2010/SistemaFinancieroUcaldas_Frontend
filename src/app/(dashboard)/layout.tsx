@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "@/presentation/store/authStore";
-import { AuthGuard } from "@/infrastructure/guards/AuthGuard";
-import { Sidebar } from "@/presentation/components/layout/Sidebar";
+import { useAuthStore } from "@/store";
+import { AuthGuard } from "@/guards";
+import { Sidebar } from "@/components/layout";
 import {
   LogOut,
   User,
