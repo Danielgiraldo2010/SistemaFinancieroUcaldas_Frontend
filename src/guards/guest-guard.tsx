@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/presentation/store/authStore';
-import { LoadingOverlay } from './LoadingOverlay';
+import { useAuthStore } from '@/store/auth.store';
+import { LoadingOverlay } from '@/components/ui/loading-overlay';
 
 interface GuestGuardProps {
   children: ReactNode;

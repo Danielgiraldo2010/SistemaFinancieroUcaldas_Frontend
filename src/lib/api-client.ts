@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { tokenManager } from '../auth/TokenManager';
+import { tokenManager } from './token-manager';
+import { env } from '@/config';
 
 export class ApiClient {
   private static instance: ApiClient;
@@ -43,8 +44,8 @@ export class ApiClient {
 
   static getInstance(): ApiClient {
     if (!ApiClient.instance) {
-      // Use proxy endpoint on Next.js server
-      ApiClient.instance = new ApiClient('/api/proxy');
+      // Peticiones directas al backend usando la URL de configuración
+      ApiClient.instance = new ApiClient(env.backendUrl);
     }
     return ApiClient.instance;
   }

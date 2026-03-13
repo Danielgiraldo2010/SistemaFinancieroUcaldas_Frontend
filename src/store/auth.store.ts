@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import { UserDto } from "@/core/domain/types";
-import { tokenManager } from "@/infrastructure/auth/TokenManager";
-import { AuthStatus } from "@/core/domain/enums";
+import { UserDto, AuthStatus } from "@/core";
+import { tokenManager } from "@/lib";
 
 interface AuthState {
   user: UserDto | null;
@@ -21,7 +20,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   status: AuthStatus.Idle,
   isAuthenticated: false,
-  isLoading: false, // ✅ CAMBIADO: ya no bloquea si initialize() no se llama
+  isLoading: false,
   pendingTwoFAToken: null,
 
   setUser: (user) => set({ user, isAuthenticated: !!user }),
@@ -40,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   initialize: () => {
-    set({ isLoading: true }); // ✅ Solo loading mientras inicializa
+    set({ isLoading: true });
     const token = tokenManager.getAccessToken();
     if (token && !tokenManager.isTokenExpired()) {
       set({

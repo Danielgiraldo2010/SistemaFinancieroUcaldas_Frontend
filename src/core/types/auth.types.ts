@@ -98,4 +98,3 @@ export interface AuditLogDto {
   resourceId?: string | null;
   resourceType?: string | null;
 }
-

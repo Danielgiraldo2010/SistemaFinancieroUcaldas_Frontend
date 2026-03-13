@@ -4,8 +4,9 @@ import {
   ValidateTwoFactorCommand, ValidateTwoFactorResponse,
   ForgotPasswordCommand, ResetPasswordCommand,
   RefreshTokenCommand, RevokeTokenCommand,
-  EnableTwoFactorCommand, AuditLogDto, Result,
-} from '../types';
+  EnableTwoFactorCommand, AuditLogDto,
+} from './auth.types';
+import { Result } from './common.types';
 
 export interface IAuthRepository {
   login(command: LoginCommand): Promise<LoginResponse>;

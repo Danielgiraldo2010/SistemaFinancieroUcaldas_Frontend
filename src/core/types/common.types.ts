@@ -14,4 +14,3 @@ export interface BaseEntity {
 
 export interface BaseEvent {
 }
-
