@@ -8,7 +8,7 @@ export const env = {
    * URL base del backend API
    * Debe incluir el protocolo (http:// o https://)
    */
-  backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+  backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL ?? 'https://cidt.runasp.net',
 
   /**
    * Entorno de ejecución
