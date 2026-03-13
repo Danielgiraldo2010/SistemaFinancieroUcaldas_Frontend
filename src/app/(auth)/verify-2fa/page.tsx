@@ -2,11 +2,11 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/presentation/store/authStore";
-import { authService } from "@/infrastructure/api/auth/AuthService";
-import { AuthStatus } from "@/core/domain/enums";
-import { GuestGuard } from "@/infrastructure/guards";
-import { AuthCard } from "@/presentation/components/ui/AuthCard";
+import { useAuthStore } from "@/store";
+import { authService } from "@/services";
+import { AuthStatus } from "@/core";
+import { GuestGuard } from "@/guards";
+import { AuthCard } from "@/components/ui";
 
 function Verify2FAContent() {
   const router = useRouter();

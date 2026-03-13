@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { securityService } from '@/infrastructure/api/security/SecurityService';
-import { IpBlackList } from '@/core/domain/types';
-import { BlackListReason } from '@/core/domain/enums';
+import { securityService } from '@/services';
+import { IpBlackList, BlackListReason } from '@/core';
 import { format } from 'date-fns';
 
 export default function SecurityPage() {
