@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Eye, EyeOff, CheckCircle2, Circle } from 'lucide-react';
 
 const rules = [
@@ -89,9 +90,11 @@ const ChangePassword = () => {
       {/* Encabezado con logo institucional */}
       <div className="flex flex-col items-center gap-2 mb-1">
         <div className="flex flex-col items-center gap-1">
-          <img
+          <Image
             src="/images/logo1ucaldas.png"
             alt="Logo Universidad de Caldas"
+            width={56}
+            height={56}
             className="w-14 h-14 object-contain"
           />
           <p className="text-[10px] text-[#d5bb87] font-semibold tracking-wide uppercase">

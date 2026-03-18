@@ -252,7 +252,6 @@ export default function DashboardTour() {
   const [run, setRun] = useState(false);
   const [tourKey, setTourKey] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const activeTargetRef = useRef<Element | null>(null);
 
@@ -267,7 +266,6 @@ export default function DashboardTour() {
 
   // ── Auto-arranque si es primera visita ──────────────────────────────────────
   useEffect(() => {
-    setMounted(true);
     const alreadySeen = localStorage.getItem(TOUR_STORAGE_KEY);
     if (!alreadySeen) {
       const timer = setTimeout(() => setRun(true), 1200);
@@ -361,8 +359,6 @@ export default function DashboardTour() {
       applyHighlight(0);
     }, 50);
   }, [applyHighlight, lockBodyScroll]);
-
-  if (!mounted) return null;
 
   return (
     <>

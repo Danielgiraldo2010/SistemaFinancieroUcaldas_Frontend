@@ -12,5 +12,4 @@ export interface BaseEntity {
   domainEvents?: BaseEvent[];
 }
 
-export interface BaseEvent {
-}
+export type BaseEvent = Record<string, unknown>;

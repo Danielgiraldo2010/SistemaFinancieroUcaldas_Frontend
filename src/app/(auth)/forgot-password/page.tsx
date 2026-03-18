@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { authService } from "@/services";
 import { AuthCard, Input } from "@/components/ui";
 import Link from "next/link";
@@ -51,14 +52,18 @@ export default function ForgotPasswordPage() {
       <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center gap-10">
         {/* Logos adaptados al diseño responsivo que aprobaste */}
         <div className="flex flex-row gap-6 items-center">
-          <img
+          <Image
             src="/images/logo1ucaldas.png"
             alt="U Caldas"
+            width={288}
+            height={84}
             className="w-56 md:w-72 drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] invert brightness-0"
           />
-          <img
+          <Image
             src="/images/logo-cidt.png"
             alt="CIDT"
+            width={144}
+            height={52}
             className="w-28 md:w-36 drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] invert brightness-0"
           />
         </div>
