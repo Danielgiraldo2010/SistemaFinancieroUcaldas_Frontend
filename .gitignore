@@ -42,3 +42,6 @@ yarn-error.log*
 
 
 
+
+# local docs with sensitive env notes
+REFACTORIZACION.md
