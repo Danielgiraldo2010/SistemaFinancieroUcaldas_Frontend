@@ -45,3 +45,4 @@ yarn-error.log*
 
 # local docs with sensitive env notes
 REFACTORIZACION.md
+MERGE_CONFLICTS_REPORT.txt
