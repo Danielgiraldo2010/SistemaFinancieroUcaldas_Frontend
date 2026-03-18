@@ -448,7 +448,7 @@ export default function DashboardTour() {
         disableScrollParentFix={true}
         disableOverlayClose={false}
         spotlightClicks={false}
-        floaterProps={{ disableAnimation: false, offset: 14 }}
+        floaterProps={{ offset: 14 }}
         styles={JOYRIDE_STYLES}
         callback={handleCallback}
         locale={{
