@@ -8,12 +8,13 @@ import {
   ChevronDown,
   LayoutDashboard,
   ClipboardList,
-  ChartColumn,
   ShieldCheck,
   UserCircle,
   Settings,
+  KeyRound,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
+import ChangePasswordModal from "@/components/ChangePasswordModal";
 
 export default function DashboardLayout({
   children,
@@ -22,6 +23,7 @@ export default function DashboardLayout({
 }) {
   const { user, logout, initialize } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -29,17 +31,12 @@ export default function DashboardLayout({
     initialize();
   }, [initialize]);
 
-  // Función para obtener el Título e ICONO dinámico del Banner
   const getPageDetails = () => {
     switch (pathname) {
       case "/dashboard":
         return { title: "Resumen Global", Icon: LayoutDashboard };
       case "/dashboard/audit-logs":
         return { title: "Logs de Auditoría", Icon: ClipboardList };
-      case "/dashboard/presupuesto":
-        return { title: "Ingresos Generales", Icon: ChartColumn };
-      case "/presupuesto":
-        return { title: "Ingresos Generales", Icon: ChartColumn };
       case "/dashboard/security":
         return { title: "Seguridad de IPs", Icon: ShieldCheck };
       case "/dashboard/profile":
@@ -55,29 +52,23 @@ export default function DashboardLayout({
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    router.push("/login"); // Mantengo la redirección original
   };
 
   return (
     <>
-      {/* Guard desactivado temporalmente para permitir cambios en dashboard */}
       <div className="flex h-screen bg-[#F4F7FE]">
         <Sidebar />
-
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* HEADER / BANNER BLANCO */}
           <header className="h-20 bg-white border-b border-gray-100 px-10 flex items-center justify-between z-40 shadow-sm">
-            {/* IDENTIFICADOR DINÁMICO (Icono + Texto) */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                {/* Aquí el icono cambia automáticamente según la página */}
                 <Icon className="w-5 h-5 text-[#003e70] opacity-80" />
                 <span className="text-[#003e70] font-black text-sm tracking-tighter uppercase">
                   SAPFIAI
                 </span>
                 <div className="h-5 w-[1px] bg-gray-200 mx-2"></div>
               </div>
-
               <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest">
                 <span className="text-gray-400">Dashboard</span>
                 <span className="text-gray-300">/</span>
@@ -86,14 +77,12 @@ export default function DashboardLayout({
             </div>
 
             <div className="flex items-center gap-6">
-              {/* ROL BADGE */}
               <div className="hidden md:block bg-[#fdf4e7] text-[#b45309] text-[10px] font-extrabold px-4 py-1.5 rounded-full border border-[#fde68a] uppercase tracking-tighter shadow-sm">
                 ROL:{" "}
                 {((user as Record<string, unknown>)?.role as string) ||
                   "SUPERADMIN"}
               </div>
 
-              {/* PERFIL */}
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
@@ -131,6 +120,17 @@ export default function DashboardLayout({
                       >
                         <User className="w-4 h-4 text-[#003e70]" /> Mi Perfil
                       </button>
+
+                      <button
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setMenuOpen(false);
+                        }}
+                        className="w-full px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-50 flex items-center gap-3"
+                      >
+                        <KeyRound className="w-4 h-4 text-[#003e70]" /> Cambiar Contraseña
+                      </button>
+
                       <button
                         onClick={handleLogout}
                         className="w-full px-5 py-4 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 font-bold border-t border-gray-50 mt-2"
@@ -140,6 +140,11 @@ export default function DashboardLayout({
                     </div>
                   </>
                 )}
+
+                <ChangePasswordModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                />
               </div>
             </div>
           </header>
