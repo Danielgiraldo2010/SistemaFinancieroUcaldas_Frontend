@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui";
@@ -13,12 +13,16 @@ import {
 
 interface FormularioPresupuestoProps {
   onSuccess?: () => void;
+  presupuesto?: Presupuesto | null;
 }
 
 export function FormularioPresupuesto({
   onSuccess,
+  presupuesto,
 }: FormularioPresupuestoProps) {
-  const { addPresupuesto, presupuestos } = usePresupuestoStore();
+  const { addPresupuesto, updatePresupuesto, presupuestos } =
+    usePresupuestoStore();
+  const isEditMode = Boolean(presupuesto);
 
   const {
     register,
@@ -37,6 +41,27 @@ export function FormularioPresupuesto({
     },
   });
 
+  useEffect(() => {
+    if (!presupuesto) {
+      reset({
+        programa: "",
+        municipio: "",
+        cohorte: "",
+        numEstudiantes: 1,
+        valorMatricula: 1,
+      });
+      return;
+    }
+
+    reset({
+      programa: presupuesto.programa,
+      municipio: presupuesto.municipio,
+      cohorte: presupuesto.cohorte,
+      numEstudiantes: presupuesto.numEstudiantes,
+      valorMatricula: presupuesto.valorMatricula,
+    });
+  }, [presupuesto, reset]);
+
   const numEstudiantes = useWatch({ control, name: "numEstudiantes" }) ?? 0;
   const valorMatricula = useWatch({ control, name: "valorMatricula" }) ?? 0;
   const descuentoVotacion = Math.round(valorMatricula * 0.1);
@@ -49,13 +74,7 @@ export function FormularioPresupuesto({
     const descuento = Math.round(values.valorMatricula * 0.1);
     const ingreso = values.valorMatricula * values.numEstudiantes;
     const descuentos = descuento * values.numEstudiantes;
-    const normalizedBaseId =
-      `${values.programa}-${values.municipio}-${values.cohorte}`
-        .toLowerCase()
-        .replace(/\s+/g, "-");
-
-    const nuevo: Presupuesto = {
-      id: `${normalizedBaseId}-${presupuestos.length + 1}`,
+    const payload = {
       programa: values.programa,
       municipio: values.municipio,
       cohorte: values.cohorte,
@@ -65,6 +84,21 @@ export function FormularioPresupuesto({
       descuentoVotacion: descuento,
       descuentos,
       ingresoNeto: ingreso - descuentos,
+    };
+
+    if (presupuesto) {
+      updatePresupuesto(presupuesto.id, payload);
+      onSuccess?.();
+      return;
+    }
+
+    const normalizedBaseId =
+      `${values.programa}-${values.municipio}-${values.cohorte}`
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+    const nuevo: Presupuesto = {
+      id: `${normalizedBaseId}-${presupuestos.length + 1}`,
+      ...payload,
     };
 
     addPresupuesto(nuevo);
@@ -125,7 +159,11 @@ export function FormularioPresupuesto({
           disabled={isSubmitting}
           className="bg-[#003e70] hover:bg-[#002f56] text-white font-semibold rounded-xl px-5 py-2.5 transition-colors disabled:opacity-60"
         >
-          {isSubmitting ? "Guardando..." : "Guardar Presupuesto"}
+          {isSubmitting
+            ? "Guardando..."
+            : isEditMode
+              ? "Guardar Cambios"
+              : "Guardar Presupuesto"}
         </button>
       </div>
     </form>
