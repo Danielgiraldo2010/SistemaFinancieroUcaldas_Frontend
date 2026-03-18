@@ -176,7 +176,7 @@ const GLOBAL_CSS = `
 
 // ─── Componente Toast de finalización ─────────────────────────────────────────
 
-function CompletionToast({ onDismiss }: { onDismiss: () => void }) {
+function CompletionToast({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
   const [hiding, setHiding] = useState(false);
 
   const handleDismiss = useCallback(() => {
@@ -360,6 +360,12 @@ export default function DashboardTour() {
     }, 50);
   }, [applyHighlight, lockBodyScroll]);
 
+  const getStepDotClass = (index: number): string => {
+    if (index === stepIndex) return "w-5 h-2.5 bg-blue-600";
+    if (index < stepIndex) return "w-2.5 h-2.5 bg-blue-300";
+    return "w-2.5 h-2.5 bg-slate-200";
+  };
+
   return (
     <>
       {/* ── Botón de inicio del tour ─────────────────────────────────── */}
@@ -407,24 +413,20 @@ export default function DashboardTour() {
         <div
           className="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] flex items-center gap-2 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-full px-4 py-2 shadow-lg"
           aria-label={`Paso ${stepIndex + 1} de ${TOTAL_STEPS}`}
-          role="progressbar"
-          aria-valuenow={stepIndex + 1}
-          aria-valuemin={1}
-          aria-valuemax={TOTAL_STEPS}
         >
+          <progress
+            className="sr-only"
+            value={stepIndex + 1}
+            max={TOTAL_STEPS}
+            aria-label={`Progreso del recorrido: paso ${stepIndex + 1} de ${TOTAL_STEPS}`}
+          />
           <span className="text-xs font-medium text-slate-500 mr-1 tabular-nums">
             {stepIndex + 1}/{TOTAL_STEPS}
           </span>
-          {TOUR_STEPS.map((_, i) => (
+          {TOUR_STEPS.map((step, i) => (
             <span
-              key={i}
-              className={`block rounded-full transition-all duration-300 ${
-                i === stepIndex
-                  ? "w-5 h-2.5 bg-blue-600"
-                  : i < stepIndex
-                    ? "w-2.5 h-2.5 bg-blue-300"
-                    : "w-2.5 h-2.5 bg-slate-200"
-              }`}
+              key={String(step.target)}
+              className={`block rounded-full transition-all duration-300 ${getStepDotClass(i)}`}
             />
           ))}
         </div>

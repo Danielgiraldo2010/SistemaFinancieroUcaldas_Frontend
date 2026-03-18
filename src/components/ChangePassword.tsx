@@ -5,7 +5,7 @@ import { Eye, EyeOff, CheckCircle2, Circle } from 'lucide-react';
 const rules = [
   { label: 'Mínimo 8 caracteres', test: (p: string) => p.length >= 8 },
   { label: 'Al menos una mayúscula', test: (p: string) => /[A-Z]/.test(p) },
-  { label: 'Al menos un número', test: (p: string) => /[0-9]/.test(p) },
+  { label: 'Al menos un número', test: (p: string) => /\d/.test(p) },
   { label: 'Al menos un carácter especial (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
 ];
 
@@ -23,7 +23,7 @@ const ChangePassword = () => {
 
   const allRulesPassed = rules.every((r) => r.test(newPassword));
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!currentPassword) {
       setMessageType('error');
@@ -31,7 +31,7 @@ const ChangePassword = () => {
       return;
     }
 
-    // TODO: reemplazar con llamada real al backend cuando esté listo
+    // Pendiente integrar validación real con backend.
     // Ejemplo de integración:
     // try {
     //   await authService.verifyPassword({ currentPassword });
@@ -47,7 +47,7 @@ const ChangePassword = () => {
     setStep(2);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!allRulesPassed) {
       setMessageType('error');
@@ -63,7 +63,7 @@ const ChangePassword = () => {
     setIsSubmitting(true);
     setMessage('');
 
-    // TODO: reemplazar con llamada real al backend cuando esté listo
+    // Pendiente integrar cambio real de contraseña con backend.
     // Ejemplo de integración:
     // try {
     //   await authService.changePassword({ currentPassword, newPassword });
@@ -115,11 +115,12 @@ const ChangePassword = () => {
       {step === 1 && (
         <form onSubmit={handleVerify} className="flex flex-col gap-3 w-full">
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600 font-medium">
+            <label htmlFor="current-password" className="text-sm text-gray-600 font-medium">
               Contraseña actual
             </label>
             <div className="relative">
               <input
+                id="current-password"
                 type={showCurrent ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -150,11 +151,12 @@ const ChangePassword = () => {
       {step === 2 && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full">
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600 font-medium">
+            <label htmlFor="new-password" className="text-sm text-gray-600 font-medium">
               Nueva contraseña
             </label>
             <div className="relative">
               <input
+                id="new-password"
                 type={showNew ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -191,11 +193,12 @@ const ChangePassword = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600 font-medium">
+            <label htmlFor="confirm-password" className="text-sm text-gray-600 font-medium">
               Confirma la contraseña
             </label>
             <div className="relative">
               <input
+                id="confirm-password"
                 type={showConfirm ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

@@ -9,6 +9,15 @@ import { AuthStatus } from "@/core";
 import { GuestGuard } from "@/guards";
 import { AuthCard } from "@/components/ui";
 
+const DIGIT_INPUT_KEYS = [
+  "digit-0",
+  "digit-1",
+  "digit-2",
+  "digit-3",
+  "digit-4",
+  "digit-5",
+] as const;
+
 function Verify2FAContent() {
   const router = useRouter();
   const { setUser, setStatus, pendingTwoFAToken } = useAuthStore();
@@ -21,7 +30,7 @@ function Verify2FAContent() {
   const refs = useRef<Array<HTMLInputElement | null>>([]);
 
   const handleChange = (i: number, val: string) => {
-    if (!/^[0-9]?$/.test(val)) return;
+    if (!/^\d?$/.test(val)) return;
     const next = [...code];
     next[i] = val;
     setCode(next);
@@ -37,7 +46,7 @@ function Verify2FAContent() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fullCode = code.join("");
     if (fullCode.length !== 6) {
@@ -210,7 +219,7 @@ function Verify2FAContent() {
               >
                 {code.map((digit, i) => (
                   <input
-                    key={i}
+                    key={DIGIT_INPUT_KEYS[i]}
                     ref={(el) => {
                       refs.current[i] = el;
                     }}
