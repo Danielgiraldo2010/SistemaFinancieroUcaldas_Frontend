@@ -8,6 +8,7 @@ import {
   ChevronDown,
   LayoutDashboard,
   ClipboardList,
+  ChartColumn,
   ShieldCheck,
   UserCircle,
   Settings,
@@ -35,6 +36,10 @@ export default function DashboardLayout({
         return { title: "Resumen Global", Icon: LayoutDashboard };
       case "/dashboard/audit-logs":
         return { title: "Logs de Auditoría", Icon: ClipboardList };
+      case "/dashboard/presupuesto":
+        return { title: "Ingresos Generales", Icon: ChartColumn };
+      case "/presupuesto":
+        return { title: "Ingresos Generales", Icon: ChartColumn };
       case "/dashboard/security":
         return { title: "Seguridad de IPs", Icon: ShieldCheck };
       case "/dashboard/profile":
