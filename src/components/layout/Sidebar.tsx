@@ -9,12 +9,13 @@ import {
   ShieldCheck,
   UserCircle,
   Settings,
-  ChevronLeft,
+  ChartColumn,
   ChevronRight,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface NavItem {
-  icon: any;
+  icon: LucideIcon;
   label: string;
   href: string;
 }
@@ -22,6 +23,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { icon: LayoutDashboard, label: "Resumen Global", href: "/dashboard" },
   { icon: ClipboardList, label: "Audit Logs", href: "/dashboard/audit-logs" },
+  { icon: ChartColumn, label: "Presupuesto", href: "/dashboard/presupuesto" },
   { icon: ShieldCheck, label: "Seguridad IPs", href: "/dashboard/security" },
   { icon: UserCircle, label: "Perfil", href: "/dashboard/profile" },
   { icon: Settings, label: "Configuración", href: "/dashboard/settings" },
