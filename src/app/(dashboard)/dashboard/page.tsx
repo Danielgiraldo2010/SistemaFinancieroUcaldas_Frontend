@@ -2,7 +2,7 @@
 import { useAuthStore } from "@/store";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { DashboardTour } from "@/components/ui"; // ✅ ya lo tenías importado
+import { DashboardTour } from "@/components/ui";
 
 const stats = [
   {
