@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? 'https://cidt.runasp.net').replace(/\/$/, '');
 
+const ALLOWED_PREFIXES = [
+  'api/Authentication',
+  'api/Security',
+  'api/Presupuesto',
+];
+
+const isAllowedPath = (pathString: string): boolean =>
+  ALLOWED_PREFIXES.some((prefix) => pathString.startsWith(prefix));
+
 const buildHeaders = (request: NextRequest) => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -19,6 +28,10 @@ export async function POST(
 ) {
   const { path } = await params;
   const pathString = (path ?? []).join('/');
+
+  if (!isAllowedPath(pathString))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const url = `${BACKEND_URL}/${pathString}`;
 
   try {
@@ -46,6 +59,10 @@ export async function GET(
 ) {
   const { path } = await params;
   const pathString = (path ?? []).join('/');
+
+  if (!isAllowedPath(pathString))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const url = `${BACKEND_URL}/${pathString}${request.nextUrl.search}`;
 
   try {
@@ -70,6 +87,10 @@ export async function PUT(
 ) {
   const { path } = await params;
   const pathString = (path ?? []).join('/');
+
+  if (!isAllowedPath(pathString))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const url = `${BACKEND_URL}/${pathString}`;
 
   try {
@@ -97,6 +118,10 @@ export async function DELETE(
 ) {
   const { path } = await params;
   const pathString = (path ?? []).join('/');
+
+  if (!isAllowedPath(pathString))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const url = `${BACKEND_URL}/${pathString}`;
 
   try {
