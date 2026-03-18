@@ -1,8 +1,9 @@
 // NOSONAR: Proxy route validated with strict allowlist/origin checks; reviewed hotspot.
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? 'https://cidt.runasp.net').replace(/\/$/, '');
-const BACKEND_ORIGIN = new URL(BACKEND_URL).origin;
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = backendUrl?.replace(/\/$/, '') ?? '';
+const BACKEND_ORIGIN = BACKEND_URL ? new URL(BACKEND_URL).origin : '';
 
 const ALLOWED_PREFIXES = [
   'api/Authentication',
@@ -37,6 +38,7 @@ const getSafePathString = (path?: string[]): string | null => {
 };
 
 const buildSafeBackendUrl = (pathString: string, search = ''): string | null => {
+  if (!BACKEND_URL || !BACKEND_ORIGIN) return null;
   const target = new URL(`${BACKEND_URL}/${pathString}`);
   target.search = search.startsWith('?') ? search.slice(1) : search;
 
@@ -63,6 +65,12 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ path?: string[] }> }
 ) {
+  if (!BACKEND_URL)
+    return NextResponse.json(
+      { error: 'Missing required environment variable: NEXT_PUBLIC_BACKEND_URL' },
+      { status: 500 }
+    );
+
   const { path } = await params;
   const pathString = getSafePathString(path);
 
@@ -96,6 +104,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path?: string[] }> }
 ) {
+  if (!BACKEND_URL)
+    return NextResponse.json(
+      { error: 'Missing required environment variable: NEXT_PUBLIC_BACKEND_URL' },
+      { status: 500 }
+    );
+
   const { path } = await params;
   const pathString = getSafePathString(path);
 
@@ -126,6 +140,12 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ path?: string[] }> }
 ) {
+  if (!BACKEND_URL)
+    return NextResponse.json(
+      { error: 'Missing required environment variable: NEXT_PUBLIC_BACKEND_URL' },
+      { status: 500 }
+    );
+
   const { path } = await params;
   const pathString = getSafePathString(path);
 
@@ -159,6 +179,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ path?: string[] }> }
 ) {
+  if (!BACKEND_URL)
+    return NextResponse.json(
+      { error: 'Missing required environment variable: NEXT_PUBLIC_BACKEND_URL' },
+      { status: 500 }
+    );
+
   const { path } = await params;
   const pathString = getSafePathString(path);
 
