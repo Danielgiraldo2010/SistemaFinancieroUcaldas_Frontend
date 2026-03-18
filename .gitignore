@@ -43,3 +43,6 @@ yarn-error.log*
 # package-lock.json
 package-lock.json
 
+#notas proyecto
+REFACTORIZACION.md
+MERGE_CONFLICTS_REPORT.txt
