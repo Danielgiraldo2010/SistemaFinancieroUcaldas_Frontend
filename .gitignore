@@ -40,9 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 #next-env.d.ts
 
-# package-lock.json
-package-lock.json
 
-#notas proyecto
+
+
+# local docs with sensitive env notes
 REFACTORIZACION.md
-MERGE_CONFLICTS_REPORT.txt

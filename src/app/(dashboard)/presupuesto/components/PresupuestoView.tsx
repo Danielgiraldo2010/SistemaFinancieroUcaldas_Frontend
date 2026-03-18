@@ -1,8 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
-import { Button, Card, Dialog, Input, Select } from "@/components/ui";
+import { Download, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import type { Presupuesto } from "@/core/models";
+import {
+  AlertDialog,
+  Button,
+  Card,
+  Dialog,
+  Input,
+  Select,
+} from "@/components/ui";
 import { usePresupuestoStore } from "@/store";
 import { FormularioPresupuesto } from "./FormularioPresupuesto";
 import { PresupuestoCharts } from "./PresupuestoCharts";
@@ -20,10 +30,117 @@ function formatCOP(value: number) {
 
 export function PresupuestoView() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [editingPresupuesto, setEditingPresupuesto] =
+    useState<Presupuesto | null>(null);
+  const [deletingPresupuesto, setDeletingPresupuesto] =
+    useState<Presupuesto | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [municipioFilter, setMunicipioFilter] = useState("Todos");
   const [cohorteFilter, setCohorteFilter] = useState("Todos");
   const presupuestos = usePresupuestoStore((state) => state.presupuestos);
+  const deletePresupuesto = usePresupuestoStore(
+    (state) => state.deletePresupuesto,
+  );
+
+  const onCreate = () => {
+    setEditingPresupuesto(null);
+    setOpenDialog(true);
+  };
+
+  const onEdit = (item: Presupuesto) => {
+    setEditingPresupuesto(item);
+    setOpenDialog(true);
+  };
+
+  const onCloseDialog = () => {
+    setOpenDialog(false);
+    setEditingPresupuesto(null);
+  };
+
+  const onConfirmDelete = () => {
+    if (!deletingPresupuesto) return;
+    deletePresupuesto(deletingPresupuesto.id);
+    setDeletingPresupuesto(null);
+  };
+
+  const onDownloadPdf = () => {
+    if (presupuestos.length === 0) return;
+
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "pt",
+      format: "a4",
+    });
+
+    const fechaGeneracion = new Date().toLocaleString("es-CO");
+    const totalIngresoNeto = presupuestos.reduce(
+      (acc, item) => acc + item.ingresoNeto,
+      0,
+    );
+
+    doc.setFontSize(16);
+    doc.text("Reporte General de Presupuestos", 40, 40);
+    doc.setFontSize(10);
+    doc.text(`Generado: ${fechaGeneracion}`, 40, 58);
+    doc.text(`Registros: ${presupuestos.length}`, 40, 72);
+
+    autoTable(doc, {
+      startY: 86,
+      head: [
+        [
+          "Programa",
+          "Periodo",
+          "Municipio",
+          "Estudiantes",
+          "Valor Matricula",
+          "Ingreso",
+          "Descuento Votacion",
+          "Descuentos",
+          "Ingreso Neto",
+        ],
+      ],
+      body: presupuestos.map((item) => [
+        item.programa,
+        item.cohorte,
+        item.municipio,
+        item.numEstudiantes.toLocaleString("es-CO"),
+        formatCOP(item.valorMatricula),
+        formatCOP(item.ingreso),
+        formatCOP(item.descuentoVotacion),
+        formatCOP(item.descuentos),
+        formatCOP(item.ingresoNeto),
+      ]),
+      headStyles: {
+        fillColor: [0, 62, 112],
+      },
+      styles: {
+        fontSize: 8,
+        cellPadding: 4,
+      },
+      columnStyles: {
+        3: { halign: "right" },
+        4: { halign: "right" },
+        5: { halign: "right" },
+        6: { halign: "right" },
+        7: { halign: "right" },
+        8: { halign: "right" },
+      },
+    });
+
+    const finalY =
+      (doc as jsPDF & { lastAutoTable?: { finalY?: number } }).lastAutoTable
+        ?.finalY ?? 86;
+
+    doc.setFontSize(11);
+    doc.text(
+      `Total Ingreso Neto: ${formatCOP(totalIngresoNeto)}`,
+      40,
+      finalY + 20,
+    );
+
+    const fecha = new Date().toISOString().slice(0, 10);
+    doc.save(`presupuesto-completo-${fecha}.pdf`);
+  };
 
   const filteredData = useMemo(() => {
     const normalizedSearch = searchQuery.trim().toLowerCase();
@@ -55,13 +172,24 @@ export function PresupuestoView() {
           </p>
         </div>
 
-        <Button
-          type="button"
-          onClick={() => setOpenDialog(true)}
-          leftIcon={<Plus size={16} />}
-        >
-          Agregar Presupuesto
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onDownloadPdf}
+            leftIcon={<Download size={16} />}
+            disabled={presupuestos.length === 0}
+          >
+            Descargar PDF
+          </Button>
+          <Button
+            type="button"
+            onClick={onCreate}
+            leftIcon={<Plus size={16} />}
+          >
+            Agregar Presupuesto
+          </Button>
+        </div>
       </div>
 
       <PresupuestoKpis data={filteredData} />
@@ -149,6 +277,9 @@ export function PresupuestoView() {
                 <th className="px-4 py-3 text-right font-semibold text-slate-700">
                   Ingreso Neto
                 </th>
+                <th className="px-4 py-3 text-center font-semibold text-slate-700">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
@@ -180,6 +311,26 @@ export function PresupuestoView() {
                   <td className="px-4 py-3 text-right font-semibold text-slate-900">
                     {formatCOP(item.ingresoNeto)}
                   </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        aria-label={`Editar ${item.programa}`}
+                        className="inline-flex items-center justify-center rounded-lg border border-slate-300 p-2 text-slate-700 hover:bg-slate-100"
+                        onClick={() => onEdit(item)}
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`Eliminar ${item.programa}`}
+                        className="inline-flex items-center justify-center rounded-lg border border-red-300 p-2 text-red-700 hover:bg-red-50"
+                        onClick={() => setDeletingPresupuesto(item)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -189,11 +340,28 @@ export function PresupuestoView() {
 
       <Dialog
         open={openDialog}
-        title="Nuevo Presupuesto"
-        onClose={() => setOpenDialog(false)}
+        title={editingPresupuesto ? "Editar Presupuesto" : "Nuevo Presupuesto"}
+        onClose={onCloseDialog}
       >
-        <FormularioPresupuesto onSuccess={() => setOpenDialog(false)} />
+        <FormularioPresupuesto
+          presupuesto={editingPresupuesto}
+          onSuccess={onCloseDialog}
+        />
       </Dialog>
+
+      <AlertDialog
+        open={Boolean(deletingPresupuesto)}
+        title="Confirmar eliminacion"
+        description={
+          deletingPresupuesto
+            ? `Vas a eliminar el presupuesto de ${deletingPresupuesto.programa} (${deletingPresupuesto.cohorte}). Esta accion no se puede deshacer.`
+            : undefined
+        }
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        onCancel={() => setDeletingPresupuesto(null)}
+        onConfirm={onConfirmDelete}
+      />
     </div>
   );
 }
