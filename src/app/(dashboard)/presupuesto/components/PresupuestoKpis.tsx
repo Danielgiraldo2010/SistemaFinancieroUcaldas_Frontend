@@ -6,7 +6,7 @@ import type { Presupuesto } from "@/core/models";
 import { Card, CardContent } from "@/components/ui";
 
 interface PresupuestoKpisProps {
-  data: Presupuesto[];
+  readonly data: Presupuesto[];
 }
 
 const copFormatter = new Intl.NumberFormat("es-CO", {

@@ -1,13 +1,13 @@
 import React from "react";
 
 interface SelectOption {
-  label: string;
-  value: string;
+  readonly label: string;
+  readonly value: string;
 }
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
-  options: SelectOption[];
+  readonly label?: string;
+  readonly options: SelectOption[];
 }
 
 export function Select({ label, options, className, ...props }: SelectProps) {

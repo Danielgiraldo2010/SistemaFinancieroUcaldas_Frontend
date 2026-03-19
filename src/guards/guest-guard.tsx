@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { LoadingOverlay } from '@/components/ui/loading-overlay';
 
 interface GuestGuardProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 /**

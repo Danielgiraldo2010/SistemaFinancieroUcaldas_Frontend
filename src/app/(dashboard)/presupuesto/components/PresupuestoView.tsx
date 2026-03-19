@@ -127,9 +127,8 @@ export function PresupuestoView() {
       },
     });
 
-    const finalY =
-      (doc as jsPDF & { lastAutoTable?: { finalY?: number } }).lastAutoTable
-        ?.finalY ?? 86;
+    const docWithTable = doc as unknown as { lastAutoTable?: { finalY?: number } };
+    const finalY = docWithTable.lastAutoTable?.finalY ?? 86;
 
     doc.setFontSize(11);
     doc.text(

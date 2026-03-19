@@ -12,8 +12,8 @@ import {
 } from "@/core/models/presupuesto.schema";
 
 interface FormularioPresupuestoProps {
-  onSuccess?: () => void;
-  presupuesto?: Presupuesto | null;
+  readonly onSuccess?: () => void;
+  readonly presupuesto?: Presupuesto | null;
 }
 
 export function FormularioPresupuesto({
@@ -95,7 +95,7 @@ export function FormularioPresupuesto({
     const normalizedBaseId =
       `${values.programa}-${values.municipio}-${values.cohorte}`
         .toLowerCase()
-        .replace(/\s+/g, "-");
+        .replaceAll(/\s+/g, "-");
     const nuevo: Presupuesto = {
       id: `${normalizedBaseId}-${presupuestos.length + 1}`,
       ...payload,
@@ -159,11 +159,10 @@ export function FormularioPresupuesto({
           disabled={isSubmitting}
           className="bg-[#003e70] hover:bg-[#002f56] text-white font-semibold rounded-xl px-5 py-2.5 transition-colors disabled:opacity-60"
         >
-          {isSubmitting
-            ? "Guardando..."
-            : isEditMode
-              ? "Guardar Cambios"
-              : "Guardar Presupuesto"}
+          {(() => {
+            if (isSubmitting) return "Guardando...";
+            return isEditMode ? "Guardar Cambios" : "Guardar Presupuesto";
+          })()}
         </button>
       </div>
     </form>

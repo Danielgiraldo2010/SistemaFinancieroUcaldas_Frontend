@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 
 interface AuthGuardProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 /**

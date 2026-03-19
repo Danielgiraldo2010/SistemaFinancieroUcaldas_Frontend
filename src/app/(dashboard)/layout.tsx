@@ -19,7 +19,7 @@ import ChangePasswordModal from "@/components/ChangePasswordModal";
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   const { user, logout, initialize } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,8 +56,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <>
-      <div className="flex h-screen bg-[#F4F7FE]">
+    <div className="flex h-screen bg-[#F4F7FE]">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="h-20 bg-white border-b border-gray-100 px-10 flex items-center justify-between z-40 shadow-sm">
@@ -67,7 +66,7 @@ export default function DashboardLayout({
                 <span className="text-[#003e70] font-black text-sm tracking-tighter uppercase">
                   SAPFIAI
                 </span>
-                <div className="h-5 w-[1px] bg-gray-200 mx-2"></div>
+                <hr className="h-5 w-[1px] bg-gray-200 mx-2 border-none" aria-hidden="true" />
               </div>
               <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest">
                 <span className="text-gray-400">Dashboard</span>
@@ -106,10 +105,12 @@ export default function DashboardLayout({
 
                 {menuOpen && (
                   <>
-                    <div
+                    <button
+                      type="button"
+                      aria-label="Cerrar menú"
                       className="fixed inset-0 z-10"
                       onClick={() => setMenuOpen(false)}
-                    ></div>
+                    />
                     <div className="absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
                       <button
                         onClick={() => {
@@ -156,6 +157,5 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
-    </>
   );
 }

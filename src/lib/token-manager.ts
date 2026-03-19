@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { env } from '@/config';
 
-const ACCESS_TOKEN_KEY  = process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY  ?? 'sapfiai_access_token';
+const ACCESS_TOKEN_KEY  = process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY ?? 'sapfiai_access_token';
 const REFRESH_TOKEN_KEY = process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY ?? 'sapfiai_refresh_token';
 const TOKEN_EXPIRY_KEY  = process.env.NEXT_PUBLIC_TOKEN_EXPIRY_KEY  ?? 'sapfiai_token_expiry';
 

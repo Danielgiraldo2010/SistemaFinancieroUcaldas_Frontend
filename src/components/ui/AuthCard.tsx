@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 interface AuthCardProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export function AuthCard({ children }: AuthCardProps) {

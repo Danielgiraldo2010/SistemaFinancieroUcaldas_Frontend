@@ -95,12 +95,13 @@ export function Sidebar() {
 
       {/* NAVEGACIÓN */}
       <nav style={{ flex: 1, padding: "0 16px" }}>
-        {NAV_ITEMS.map((Item) => {
-          const active = pathname === Item.href;
+        {NAV_ITEMS.map((item) => {
+          const active = pathname === item.href;
+          const Icon = item.icon;
           return (
             <button
-              key={Item.href}
-              onClick={() => router.push(Item.href)}
+              key={item.href}
+              onClick={() => router.push(item.href)}
               className="group"
               style={{
                 display: "flex",
@@ -120,7 +121,7 @@ export function Sidebar() {
                 justifyContent: collapsed ? "center" : "flex-start",
               }}
             >
-              <Item.icon
+              <Icon
                 size={22}
                 strokeWidth={active ? 2.5 : 1.5}
                 style={{
@@ -137,7 +138,7 @@ export function Sidebar() {
                     letterSpacing: "0.3px",
                   }}
                 >
-                  {Item.label}
+                  {item.label}
                 </span>
               )}
 

@@ -12,22 +12,36 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
   if (!isOpen) return null;
 
   return createPortal(
-    <div
-      className="flex items-center justify-center bg-black bg-opacity-40 p-4"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 9999,
-      }}
-      onClick={onClose}
-    >
-      <div
+    <>
+      <button
+        type="button"
+        className="bg-black bg-opacity-40"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          border: 'none',
+          cursor: 'default',
+        }}
+        onClick={onClose}
+        aria-label="Cerrar modal"
+      />
+      <dialog
+        open
         className="relative bg-white rounded-2xl shadow-2xl p-6"
-        style={{ width: '100%', maxWidth: '400px' }}
-        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 10000,
+          border: 'none',
+        }}
       >
         <button
           onClick={onClose}
@@ -36,8 +50,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
           <X className="w-5 h-5" />
         </button>
         <ChangePassword />
-      </div>
-    </div>,
+      </dialog>
+    </>,
     document.body
   );
 };

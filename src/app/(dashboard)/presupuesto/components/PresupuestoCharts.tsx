@@ -32,7 +32,7 @@ function toNumber(value: unknown) {
 }
 
 interface PresupuestoChartsProps {
-  data: Presupuesto[];
+  readonly data: Presupuesto[];
 }
 
 export function PresupuestoCharts({ data }: PresupuestoChartsProps) {

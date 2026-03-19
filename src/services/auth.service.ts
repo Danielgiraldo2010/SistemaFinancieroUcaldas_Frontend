@@ -1,5 +1,4 @@
-import { apiClient } from '@/lib';
-import { tokenManager } from '@/lib';
+import { apiClient, tokenManager } from '@/lib';
 import { endpoints } from '@/config';
 import {
   IAuthRepository,

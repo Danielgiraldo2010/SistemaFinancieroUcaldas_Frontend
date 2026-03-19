@@ -3,13 +3,13 @@
 import { useEffect } from "react";
 
 interface AlertDialogProps {
-  open: boolean;
-  title: string;
-  description?: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  readonly open: boolean;
+  readonly title: string;
+  readonly description?: string;
+  readonly confirmText?: string;
+  readonly cancelText?: string;
+  readonly onConfirm: () => void;
+  readonly onCancel: () => void;
 }
 
 export function AlertDialog({
