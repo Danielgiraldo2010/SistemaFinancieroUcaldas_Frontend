@@ -1,0 +1,130 @@
+CORRECCIONES SONAR — SAPFIAI
+=============================
+
+1. src/services/auth.service.ts
+   Error: Dos imports del mismo módulo '@/lib'.
+   Fix: Fusionadas en una sola línea: import { apiClient, tokenManager } from '@/lib'.
+
+2. src/lib/api-client.ts — Promise.reject
+   Error: Prefer `throw error` over `return Promise.reject(error)`.
+   Fix: Reemplazados ambos `return Promise.reject(error)` por `throw error`.
+
+3. src/lib/api-client.ts — window
+   Error: Prefer `globalThis` over `window`.
+   Fix: Reemplazado `window.location.href` por `globalThis.location.href`.
+
+4. src/lib/api-client.ts — readonly
+   Error: Member 'client' is never reassigned; mark it as readonly.
+   Fix: Añadido `readonly` al campo `private readonly client`.
+
+5. src/guards/guest-guard.tsx
+   Error: Mark the props of the component as read-only.
+   Fix: Añadido `readonly` a `children` en GuestGuardProps.
+
+6. src/guards/auth-guard.tsx
+   Error: Mark the props of the component as read-only.
+   Fix: Añadido `readonly` a `children` en AuthGuardProps.
+
+7. src/components/ui/Select.tsx
+   Error: Mark the props of the component as read-only.
+   Fix: Añadido `readonly` a todos los campos de SelectOption y SelectProps.
+
+8. src/components/ui/Input.tsx
+   Error: Extract this nested ternary operation into an independent statement.
+   Fix: Extraído el ternario anidado a la variable `inputType`.
+
+9. src/components/ui/Dialog.tsx — globalThis
+   Error: Prefer `globalThis` over `window`.
+   Fix: Reemplazado `window` por `globalThis` en addEventListener/removeEventListener.
+
+10. src/components/ui/Dialog.tsx — readonly
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a todos los campos de DialogProps.
+
+11. src/components/ui/Card.tsx
+    Error: Headings must have content accessible by a screen reader.
+    Fix: Extraído `children` explícitamente y retorna `null` si está vacío.
+
+12. src/components/ui/Button.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a todos los campos de ButtonProps.
+
+13. src/components/ui/AuthCard.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `children` en AuthCardProps.
+
+14. src/components/ui/AlertDialog.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a todos los campos de AlertDialogProps.
+
+15. src/components/layout/Sidebar.tsx
+    Error: Imported JSX component icon must be in PascalCase.
+    Fix: Renombrada variable del map de `Item` a `item`, extraído icono como `const Icon = item.icon`.
+
+16. src/components/ChangePasswordModal.tsx — keyboard listener
+    Error: Visible, non-interactive elements with click handlers must have at least one keyboard listener.
+    Fix: Añadido `onKeyDown` al overlay y `role`/`aria-modal` al contenedor del modal.
+
+17. src/components/ChangePasswordModal.tsx — non-native interactive
+    Error: Avoid non-native interactive elements.
+    Fix: Reemplazado el div overlay por un `button` nativo y el div modal por un elemento `<dialog>` nativo.
+
+18. src/app/layout.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `children` en RootLayout.
+
+19. src/app/(dashboard)/presupuesto/components/PresupuestoView.tsx
+    Error: This assertion is unnecessary since it does not change the type of the expression.
+    Fix: Reemplazado el cast directo por `as unknown as { lastAutoTable?... }`.
+
+20. src/app/(dashboard)/presupuesto/components/PresupuestoKpis.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `data` en PresupuestoKpisProps.
+
+21. src/app/(dashboard)/presupuesto/components/PresupuestoCharts.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `data` en PresupuestoChartsProps.
+
+22. src/app/(dashboard)/presupuesto/components/FormularioPresupuesto.tsx — ternario
+    Error: Extract this nested ternary operation into an independent statement.
+    Fix: Extraído el ternario anidado del botón submit a un IIFE.
+
+23. src/app/(dashboard)/presupuesto/components/FormularioPresupuesto.tsx — replaceAll
+    Error: Prefer `String#replaceAll()` over `String#replace()`.
+    Fix: Reemplazado `.replace()` por `.replaceAll()`.
+
+24. src/app/(dashboard)/presupuesto/components/FormularioPresupuesto.tsx — readonly
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a todos los campos de FormularioPresupuestoProps.
+
+25. src/app/(dashboard)/layout.tsx — keyboard listener
+    Error: Visible, non-interactive elements with click handlers must have at least one keyboard listener.
+    Fix: Reemplazado el div overlay del menú por un `button` nativo.
+
+26. src/app/(dashboard)/layout.tsx — non-native interactive
+    Error: Avoid non-native interactive elements.
+    Fix: Reemplazado el div separador por un `<hr aria-hidden="true">`.
+
+27. src/app/(dashboard)/layout.tsx — fragment
+    Error: A fragment with only one child is redundant.
+    Fix: Eliminado el fragment `<>` innecesario del return.
+
+28. src/app/(dashboard)/layout.tsx — readonly
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `children` en DashboardLayout.
+
+29. src/app/(dashboard)/dashboard/security/page.tsx
+    Error: Extract this nested ternary operation into an independent statement.
+    Fix: Extraído el ternario anidado a la función `renderContent()`.
+
+30. src/app/(dashboard)/dashboard/audit-logs/page.tsx
+    Error: Extract this nested ternary operation into an independent statement.
+    Fix: Extraído el ternario anidado a la función `renderContent()`.
+
+31. src/app/(auth)/login/head.tsx
+    Error: A fragment with only one child is redundant.
+    Fix: Eliminado el fragment `<>` innecesario, retornando el `<link>` directamente.
+
+32. src/app/(auth)/layout.tsx
+    Error: Mark the props of the component as read-only.
+    Fix: Añadido `readonly` a `children` en AuthLayout.

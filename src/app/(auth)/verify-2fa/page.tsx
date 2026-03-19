@@ -1,12 +1,22 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store";
 import { authService } from "@/services";
 import { AuthStatus } from "@/core";
 import { GuestGuard } from "@/guards";
 import { AuthCard } from "@/components/ui";
+
+const DIGIT_INPUT_KEYS = [
+  "digit-0",
+  "digit-1",
+  "digit-2",
+  "digit-3",
+  "digit-4",
+  "digit-5",
+] as const;
 
 function Verify2FAContent() {
   const router = useRouter();
@@ -17,14 +27,14 @@ function Verify2FAContent() {
   const [error, setError] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
-  const refs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
+  const refs = useRef<Array<HTMLInputElement | null>>([]);
 
   const handleChange = (i: number, val: string) => {
-    if (!/^[0-9]?$/.test(val)) return;
+    if (!/^\d?$/.test(val)) return;
     const next = [...code];
     next[i] = val;
     setCode(next);
-    if (val && i < 5) refs[i + 1].current?.focus();
+    if (val && i < 5) refs.current[i + 1]?.focus();
   };
 
   const handleKeyDown = (
@@ -32,11 +42,11 @@ function Verify2FAContent() {
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Backspace" && !code[i] && i > 0) {
-      refs[i - 1].current?.focus();
+      refs.current[i - 1]?.focus();
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fullCode = code.join("");
     if (fullCode.length !== 6) {
@@ -148,11 +158,14 @@ function Verify2FAContent() {
         <div className="verify-inner">
           {/* LOGO ARRIBA (móvil/tablet) - CIDT */}
           <div className="logo-mobile-top">
-            <img
+            <Image
               src="/images/logo-cidt.png"
               alt="CIDT"
+              width={100}
+              height={36}
               style={{
                 width: "100px",
+                height: "auto",
                 filter:
                   "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
               }}
@@ -206,8 +219,10 @@ function Verify2FAContent() {
               >
                 {code.map((digit, i) => (
                   <input
-                    key={i}
-                    ref={refs[i]}
+                    key={DIGIT_INPUT_KEYS[i]}
+                    ref={(el) => {
+                      refs.current[i] = el;
+                    }}
                     type="text"
                     maxLength={1}
                     value={digit}
@@ -260,11 +275,14 @@ function Verify2FAContent() {
 
           {/* LOGO ABAJO (móvil/tablet) - U. Caldas */}
           <div className="logo-mobile-bottom">
-            <img
+            <Image
               src="/images/logo1ucaldas.png"
               alt="U Caldas"
+              width={200}
+              height={58}
               style={{
                 width: "200px",
+                height: "auto",
                 filter:
                   "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
               }}
@@ -273,20 +291,26 @@ function Verify2FAContent() {
 
           {/* LOGOS DESKTOP (derecha) */}
           <div className="logos-desktop">
-            <img
+            <Image
               src="/images/logo-cidt.png"
               alt="CIDT"
+              width={120}
+              height={44}
               style={{
                 width: "120px",
+                height: "auto",
                 filter:
                   "brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.7))",
               }}
             />
-            <img
+            <Image
               src="/images/logo1ucaldas.png"
               alt="U Caldas"
+              width={260}
+              height={76}
               style={{
                 width: "260px",
+                height: "auto",
                 filter:
                   "brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.7))",
               }}

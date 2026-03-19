@@ -18,13 +18,17 @@ export function CardHeader({
 
 export function CardTitle({
   className,
+  children,
   ...props
 }: HTMLAttributes<HTMLHeadingElement>) {
+  if (!children) return null;
   return (
     <h3
       className={`text-sm font-bold tracking-tight text-slate-800 ${className ?? ""}`}
       {...props}
-    />
+    >
+      {children}
+    </h3>
   );
 }
 

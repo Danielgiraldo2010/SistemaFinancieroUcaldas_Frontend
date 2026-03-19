@@ -34,6 +34,53 @@ export default function SecurityPage() {
     [BlackListReason.ReportedAbuse]: 'Abuso reportado',
   };
 
+  const renderContent = () => {
+    if (loading) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando IPs bloqueadas...</div>;
+    if (ips.length === 0) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>✅ No hay IPs bloqueadas actualmente</div>;
+    return (
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
+            {['IP', 'Razón', 'Bloqueado por', 'Vencimiento', 'Acción'].map((h) => (
+              <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {ips.map((ip) => (
+            <tr key={ip.ipAddress} style={{ borderBottom: '1px solid #f3f4f6' }}>
+              <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '600', color: '#111827', fontFamily: 'monospace' }}>{ip.ipAddress ?? '—'}</td>
+              <td style={{ padding: '12px 16px' }}>
+                <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', backgroundColor: '#fee2e2', color: '#991b1b' }}>
+                  {ip.blackListReason !== undefined && reasonLabel[ip.blackListReason] !== undefined
+                    ? reasonLabel[ip.blackListReason]
+                    : ip.reason}
+                </span>
+              </td>
+              <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>{ip.blockedBy ?? '—'}</td>
+              <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>
+                {ip.expiryDate ? format(new Date(ip.expiryDate), 'dd/MM/yy HH:mm') : '∞ Permanente'}
+              </td>
+              <td style={{ padding: '12px 16px' }}>
+                <button
+                  onClick={() => ip.ipAddress && handleUnblock(ip.ipAddress)}
+                  disabled={unlocking === ip.ipAddress || !ip.ipAddress}
+                  style={{
+                    padding: '6px 14px', backgroundColor: '#dcfce7', color: '#166534',
+                    border: '1px solid #bbf7d0', borderRadius: '8px',
+                    cursor: unlocking === ip.ipAddress ? 'not-allowed' : 'pointer',
+                    fontSize: '13px', fontWeight: '600',
+                  }}>
+                  {unlocking === ip.ipAddress ? '⏳' : '🔓 Desbloquear'}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   return (
     <div style={{ padding: '36px 40px' }}>
       <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -47,52 +94,7 @@ export default function SecurityPage() {
       </div>
 
       <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando IPs bloqueadas...</div>
-        ) : ips.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>✅ No hay IPs bloqueadas actualmente</div>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
-                {['IP', 'Razón', 'Bloqueado por', 'Vencimiento', 'Acción'].map((h) => (
-                  <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ips.map((ip) => (
-                <tr key={ip.ipAddress} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '600', color: '#111827', fontFamily: 'monospace' }}>{ip.ipAddress ?? '—'}</td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', backgroundColor: '#fee2e2', color: '#991b1b' }}>
-                      {ip.blackListReason !== undefined && reasonLabel[ip.blackListReason] !== undefined
-                        ? reasonLabel[ip.blackListReason]
-                        : ip.reason}
-                    </span>
-                  </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>{ip.blockedBy ?? '—'}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>
-                    {ip.expiryDate ? format(new Date(ip.expiryDate), 'dd/MM/yy HH:mm') : '∞ Permanente'}
-                  </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <button
-                      onClick={() => ip.ipAddress && handleUnblock(ip.ipAddress)}
-                      disabled={unlocking === ip.ipAddress || !ip.ipAddress}
-                      style={{
-                      padding: '6px 14px', backgroundColor: '#dcfce7', color: '#166534',
-                      border: '1px solid #bbf7d0', borderRadius: '8px',
-                      cursor: unlocking === ip.ipAddress ? 'not-allowed' : 'pointer',
-                      fontSize: '13px', fontWeight: '600',
-                    }}>
-                      {unlocking === ip.ipAddress ? '⏳' : '🔓 Desbloquear'}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        {renderContent()}
       </div>
     </div>
   );

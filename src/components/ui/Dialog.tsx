@@ -3,10 +3,10 @@
 import { ReactNode, useEffect } from "react";
 
 interface DialogProps {
-  open: boolean;
-  title: string;
-  onClose: () => void;
-  children: ReactNode;
+  readonly open: boolean;
+  readonly title: string;
+  readonly onClose: () => void;
+  readonly children: ReactNode;
 }
 
 export function Dialog({ open, title, onClose, children }: DialogProps) {
@@ -17,8 +17,8 @@ export function Dialog({ open, title, onClose, children }: DialogProps) {
       if (event.key === "Escape") onClose();
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    globalThis.addEventListener("keydown", onKeyDown);
+    return () => globalThis.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
   if (!open) return null;

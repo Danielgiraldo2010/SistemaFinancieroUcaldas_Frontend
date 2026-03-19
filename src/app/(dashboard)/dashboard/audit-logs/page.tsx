@@ -21,6 +21,43 @@ export default function AuditLogsPage() {
 
   useEffect(() => { fetchLogs(); }, [fetchLogs]);
 
+  const renderContent = () => {
+    if (loading) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando logs...</div>;
+    if (logs.length === 0) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>📭 Sin registros encontrados</div>;
+    return (
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
+              {['Acción', 'Usuario', 'IP', 'Estado', 'Fecha'].map((h) => (
+                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((log) => (
+              <tr key={log.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#111827' }}>{log.action ?? '—'}</td>
+                <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>{log.userEmail ?? '—'}</td>
+                <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563', fontFamily: 'monospace' }}>{log.ipAddress ?? '—'}</td>
+                <td style={{ padding: '12px 16px' }}>
+                  <span style={{
+                    padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600',
+                    backgroundColor: log.status === 'Success' ? '#dcfce7' : '#fee2e2',
+                    color: log.status === 'Success' ? '#166534' : '#991b1b',
+                  }}>{log.status ?? '—'}</span>
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: '13px', color: '#6b7280' }}>
+                  {log.timestamp ? format(new Date(log.timestamp), 'dd/MM/yy HH:mm') : '—'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div style={{ padding: '36px 40px' }}>
       <div style={{ marginBottom: '28px' }}>
@@ -43,42 +80,7 @@ export default function AuditLogsPage() {
       </div>
 
       <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando logs...</div>
-        ) : logs.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>📭 Sin registros encontrados</div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
-                  {['Acción', 'Usuario', 'IP', 'Estado', 'Fecha'].map((h) => (
-                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map((log) => (
-                  <tr key={log.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#111827' }}>{log.action ?? '—'}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563' }}>{log.userEmail ?? '—'}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#4b5563', fontFamily: 'monospace' }}>{log.ipAddress ?? '—'}</td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <span style={{
-                        padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600',
-                        backgroundColor: log.status === 'Success' ? '#dcfce7' : '#fee2e2',
-                        color: log.status === 'Success' ? '#166534' : '#991b1b',
-                      }}>{log.status ?? '—'}</span>
-                    </td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#6b7280' }}>
-                      {log.timestamp ? format(new Date(log.timestamp), 'dd/MM/yy HH:mm') : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {renderContent()}
       </div>
 
       <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '20px' }}>

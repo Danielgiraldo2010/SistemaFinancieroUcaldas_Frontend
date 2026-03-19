@@ -3,7 +3,7 @@ import { tokenManager } from './token-manager';
 
 export class ApiClient {
   private static instance: ApiClient;
-  private client: AxiosInstance;
+  private readonly client: AxiosInstance;
   private static readonly INTERNAL_PROXY_BASE_URL = '/api/backend';
 
   constructor(baseURL: string) {
@@ -33,11 +33,11 @@ export class ApiClient {
             return this.client(original);
           } catch {
             tokenManager.clearTokens();
-            if (typeof window !== 'undefined') window.location.href = '/login';
-            return Promise.reject(error);
+            if (typeof globalThis !== 'undefined') globalThis.location.href = '/login';
+            throw error;
           }
         }
-        return Promise.reject(error);
+        throw error;
       }
     );
   }

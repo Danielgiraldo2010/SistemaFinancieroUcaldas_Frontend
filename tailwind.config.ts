@@ -31,6 +31,15 @@ const config: Config = {
         // La guía pide Roboto
         sans: ["var(--font-roboto)", "ui-sans-serif", "system-ui"],
       },
+      keyframes: {
+        strongZoom: {
+          from: { transform: "scale(1)" },
+          to: { transform: "scale(1.1)" },
+        },
+      },
+      animation: {
+        strongZoom: "strongZoom 10s ease-in-out infinite alternate",
+      },
     },
   },
   plugins: [],

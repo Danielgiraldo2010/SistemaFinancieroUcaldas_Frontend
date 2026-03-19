@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default function AuthLayout({ children }: { readonly children: ReactNode }) {
   return (
     <div
       style={{
@@ -9,14 +9,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         overflow: "hidden",
       }}
     >
-      {/* ANIMACIÓN */}
-      <style>{`
-        @keyframes strongZoom {
-          from { transform: scale(1); }
-          to { transform: scale(1.1); }
-        }
-      `}</style>
-
       {/* IMAGEN DE FONDO */}
       <div
         className="animate-bgFloat"

@@ -16,6 +16,7 @@ export const Input = ({
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
+  const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
@@ -32,7 +33,7 @@ export const Input = ({
         )}
         <input
           {...props}
-          type={isPassword ? (showPassword ? "text" : "password") : type}
+          type={inputType}
           className={`w-full px-4 py-3 rounded-xl border transition-all outline-none
             ${error ? "border-red-500 focus:ring-1 focus:ring-red-500" : "border-gray-200 focus:border-ucaldas-blue focus:ring-1 focus:ring-ucaldas-blue"}
             ${leftIcon ? "pl-10" : "pl-4"}

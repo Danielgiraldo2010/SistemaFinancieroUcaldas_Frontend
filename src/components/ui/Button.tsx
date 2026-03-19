@@ -5,8 +5,8 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  leftIcon?: ReactNode;
+  readonly variant?: ButtonVariant;
+  readonly leftIcon?: ReactNode;
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
