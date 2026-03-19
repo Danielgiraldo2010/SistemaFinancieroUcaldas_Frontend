@@ -3,18 +3,47 @@ import { useAuthStore } from "@/store";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { DashboardTour } from "@/components/ui";
+import {
+  LayoutDashboard,
+  KeyRound,
+  ShieldCheck,
+  Server,
+  CircleCheck,
+  CircleX,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const stats = [
   {
     label: "Estado del sistema",
     value: "Activo",
-    icon: "✅",
+    icon: LayoutDashboard,
     color: "#10b981",
   },
-  { label: "Módulo Auth", value: "JWT + 2FA", icon: "🔐", color: "#667eea" },
-  { label: "Seguridad", value: "IP Guard", icon: "🛡️", color: "#f59e0b" },
-  { label: "API Backend", value: "SAPFIAI v1", icon: "⚡", color: "#8b5cf6" },
-];
+  {
+    label: "Módulo Auth",
+    value: "JWT + 2FA",
+    icon: KeyRound,
+    color: "#667eea",
+  },
+  {
+    label: "Seguridad",
+    value: "IP Guard",
+    icon: ShieldCheck,
+    color: "#f59e0b",
+  },
+  {
+    label: "API Backend",
+    value: "SAPFIAI v1",
+    icon: Server,
+    color: "#8b5cf6",
+  },
+] as const satisfies ReadonlyArray<{
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  color: string;
+}>;
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
@@ -120,10 +149,9 @@ export default function DashboardPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "22px",
                 }}
               >
-                {stat.icon}
+                <stat.icon size={22} strokeWidth={2} color={stat.color} />
               </div>
             </div>
           </div>
@@ -175,7 +203,25 @@ export default function DashboardPage() {
           </div>
           <div>
             <span style={{ fontWeight: "600", color: "#111827" }}>2FA: </span>
-            {user?.twoFactorEnabled ? "✅ Habilitado" : "❌ Deshabilitado"}
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              {user?.twoFactorEnabled ? (
+                <>
+                  <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+                  Habilitado
+                </>
+              ) : (
+                <>
+                  <CircleX size={16} color="#dc2626" strokeWidth={2} />
+                  Deshabilitado
+                </>
+              )}
+            </span>
           </div>
           <div>
             <span style={{ fontWeight: "600", color: "#111827" }}>
@@ -229,28 +275,88 @@ export default function DashboardPage() {
         >
           {/* Grupo de módulos de reportes — paso 3 del tour */}
           <div id="dashboard-reports">
-            <p style={{ margin: 0 }}>
-              ✅ Autenticación JWT con refresh token automático
+            <p
+              style={{
+                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Autenticación JWT con refresh token automático</span>
             </p>
-            <p style={{ margin: "8px 0 0" }}>
-              ✅ Verificación en dos pasos (TOTP / 2FA)
+            <p
+              style={{
+                margin: "8px 0 0",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Verificación en dos pasos (TOTP / 2FA)</span>
             </p>
-            <p style={{ margin: "8px 0 0" }}>
-              ✅ Recuperación y restablecimiento de contraseña
+            <p
+              style={{
+                margin: "8px 0 0",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Recuperación y restablecimiento de contraseña</span>
             </p>
-            <p style={{ margin: "8px 0 0" }}>
-              ✅ Audit logs paginados por usuario
+            <p
+              style={{
+                margin: "8px 0 0",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Audit logs paginados por usuario</span>
             </p>
           </div>
 
           {/* Grupo de módulos de seguridad — paso 4 del tour */}
           <div id="dashboard-security" style={{ marginTop: "8px" }}>
-            <p style={{ margin: 0 }}>
-              ✅ Gestión de IPs bloqueadas (Security service)
+            <p
+              style={{
+                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Gestión de IPs bloqueadas (Security service)</span>
             </p>
-            <p style={{ margin: "8px 0 0" }}>✅ Desbloqueo de cuentas</p>
-            <p style={{ margin: "8px 0 0" }}>
-              ✅ Clean Architecture (Domain / Infrastructure / Presentation)
+            <p
+              style={{
+                margin: "8px 0 0",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>Desbloqueo de cuentas</span>
+            </p>
+            <p
+              style={{
+                margin: "8px 0 0",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <CircleCheck size={16} color="#16a34a" strokeWidth={2} />
+              <span>
+                Clean Architecture (Domain / Infrastructure / Presentation)
+              </span>
             </p>
           </div>
         </div>
