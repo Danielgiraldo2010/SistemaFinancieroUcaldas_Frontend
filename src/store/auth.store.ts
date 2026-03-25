@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   initialize: () => {
     set({ isLoading: true });
     const token = tokenManager.getAccessToken();
-    if (token && !tokenManager.isTokenExpired()) {
+    if (token && !tokenManager.isTokenExpired() && !tokenManager.is2FAPending()) {
       set({
         status: AuthStatus.Authenticated,
         isAuthenticated: true,

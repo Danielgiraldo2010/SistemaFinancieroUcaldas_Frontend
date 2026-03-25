@@ -25,8 +25,9 @@ export default function LoginPage() {
     try {
       const response = await authService.login({ email, password });
 
-      if (response.requires2FA) {
-        setPendingTwoFAToken(response.token ?? null);
+      if (response.requires2FA && response.token) {
+        // Token temporal 2FA — guardar y redirigir a verificación
+        setPendingTwoFAToken(response.token);
         router.push("/verify-2fa");
         return;
       }

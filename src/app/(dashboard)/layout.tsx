@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
+import { AuthGuard } from "@/guards";
 
 export default function DashboardLayout({
   children,
@@ -56,7 +57,8 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen bg-[#F4F7FE]">
+    <AuthGuard>
+      <div className="flex h-screen bg-[#F4F7FE]">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="h-20 bg-white border-b border-gray-100 px-10 flex items-center justify-between z-40 shadow-sm">
@@ -66,7 +68,10 @@ export default function DashboardLayout({
                 <span className="text-[#003e70] font-black text-sm tracking-tighter uppercase">
                   SAPFIAI
                 </span>
-                <hr className="h-5 w-[1px] bg-gray-200 mx-2 border-none" aria-hidden="true" />
+                <hr
+                  className="h-5 w-[1px] bg-gray-200 mx-2 border-none"
+                  aria-hidden="true"
+                />
               </div>
               <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest">
                 <span className="text-gray-400">Dashboard</span>
@@ -129,7 +134,8 @@ export default function DashboardLayout({
                         }}
                         className="w-full px-5 py-3 text-left text-sm text-gray-600 hover:bg-slate-50 flex items-center gap-3"
                       >
-                        <KeyRound className="w-4 h-4 text-[#003e70]" /> Cambiar Contraseña
+                        <KeyRound className="w-4 h-4 text-[#003e70]" /> Cambiar
+                        Contraseña
                       </button>
 
                       <button
@@ -157,5 +163,6 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
+    </AuthGuard>
   );
 }

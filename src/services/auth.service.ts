@@ -25,7 +25,8 @@ export class AuthService implements IAuthRepository {
       endpoints.auth.login,
       command,
     );
-    if (response.success && response.token && response.refreshToken) {
+    // Solo guarda tokens si el login es completo (sin 2FA pendiente)
+    if (response.success && !response.requires2FA && response.token && response.refreshToken) {
       tokenManager.setTokens(
         response.token,
         response.refreshToken,

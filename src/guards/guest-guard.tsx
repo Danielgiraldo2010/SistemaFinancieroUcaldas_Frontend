@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { LoadingOverlay } from '@/components/ui/loading-overlay';
 
@@ -14,20 +14,22 @@ interface GuestGuardProps {
  */
 export function GuestGuard({ children }: GuestGuardProps) {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const pathname = usePathname();
+  const { isAuthenticated, isLoading, pendingTwoFAToken } = useAuthStore();
+  const isVerify2FA = pathname === '/verify-2fa';
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       router.replace('/dashboard');
+      return;
     }
-  }, [isAuthenticated, isLoading, router]);
+    if (!isLoading && isVerify2FA && !pendingTwoFAToken) {
+      router.replace('/login');
+    }
+  }, [isAuthenticated, isLoading, router, isVerify2FA, pendingTwoFAToken]);
 
-  // Mientras está cargando, muestra un loader
   if (isLoading) return <LoadingOverlay />;
-
-  // Si el usuario ya está autenticado, no muestra nada (se redirige)
   if (isAuthenticated) return null;
-
-  // Si no está autenticado y no está cargando, muestra el contenido
+  if (isVerify2FA && !pendingTwoFAToken) return null;
   return <>{children}</>;
 }

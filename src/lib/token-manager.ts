@@ -36,8 +36,31 @@ export class TokenManager {
 
   isTokenExpired(): boolean {
     const expiry = Cookies.get(TOKEN_EXPIRY_KEY);
-    if (!expiry) return true;
+    if (!expiry) return !this.getAccessToken();
     return new Date(expiry) <= new Date();
+  }
+
+  decodeToken(token?: string): Record<string, unknown> | null {
+    const t = token ?? this.getAccessToken();
+    if (!t) return null;
+    try {
+      return JSON.parse(atob(t.split('.')[1]));
+    } catch {
+      return null;
+    }
+  }
+
+  getRolesFromToken(): string[] {
+    const payload = this.decodeToken();
+    if (!payload) return [];
+    const roleKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
+    const roles = payload[roleKey] ?? payload['role'] ?? payload['roles'] ?? [];
+    return Array.isArray(roles) ? roles : [roles as string];
+  }
+
+  is2FAPending(): boolean {
+    const payload = this.decodeToken();
+    return payload?.['2fa_pending'] === 'true';
   }
 
   async refreshAccessToken(): Promise<void> {

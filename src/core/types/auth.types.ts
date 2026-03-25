@@ -20,6 +20,7 @@ export interface RegisterCommand {
 export interface LoginResponse {
   success?: boolean;
   token?: string | null;
+  twoFAToken?: string | null;
   refreshToken?: string | null;
   refreshTokenExpiry?: string | null;
   user?: UserDto | null;
@@ -33,6 +34,7 @@ export interface UserDto {
   email?: string;
   userName?: string | null;
   phoneNumber?: string | null;
+  roles?: string[] | null;
   twoFactorEnabled?: boolean;
   lastLoginDate?: string | null;
   lastLoginIp?: string | null;

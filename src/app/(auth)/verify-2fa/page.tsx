@@ -8,6 +8,7 @@ import { authService } from "@/services";
 import { AuthStatus } from "@/core";
 import { GuestGuard } from "@/guards";
 import { AuthCard } from "@/components/ui";
+import { tokenManager } from "@/lib";
 
 const DIGIT_INPUT_KEYS = [
   "digit-0",
@@ -46,6 +47,8 @@ function Verify2FAContent() {
     }
   };
 
+  const ALLOWED_ROLES = ['user', 'manager', 'administrator'];
+
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fullCode = code.join("");
@@ -60,12 +63,21 @@ function Verify2FAContent() {
         code: fullCode,
         token: pendingTwoFAToken ?? undefined,
       });
-      if (response.success && response.user) {
-        setUser(response.user);
+      if (response.success && response.token) {
+        // Roles vienen en el JWT, no en el objeto user
+        const roles = tokenManager.getRolesFromToken();
+        const hasAccess = roles.length === 0 || roles.some((r) => ALLOWED_ROLES.includes(r.toLowerCase()));
+        if (!hasAccess) {
+          setError("No tienes permisos para acceder al sistema");
+          setStatus(AuthStatus.Unauthenticated);
+          tokenManager.clearTokens();
+          return;
+        }
+        if (response.user) setUser(response.user);
         setStatus(AuthStatus.Authenticated);
         router.push("/dashboard");
       } else {
-        setError("Código inválido o expirado");
+        setError(response.message || "Código inválido o expirado");
         setStatus(AuthStatus.Unauthenticated);
       }
     } catch {
