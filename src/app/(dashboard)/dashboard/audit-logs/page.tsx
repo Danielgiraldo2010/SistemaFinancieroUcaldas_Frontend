@@ -5,24 +5,39 @@ import { AuditLogDto } from '@/core';
 import { format } from 'date-fns';
 
 export default function AuditLogsPage() {
-  const [logs, setLogs]     = useState<AuditLogDto[]>([]);
+  const [logs, setLogs]       = useState<AuditLogDto[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage]     = useState(1);
-  const [action, setAction] = useState('');
+  const [page, setPage]       = useState(1);
+  const [action, setAction]   = useState('');
+  const [error, setError]     = useState<string | null>(null);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const data = await authService.getAuditLogs(page, 20, action || undefined);
       setLogs(data);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
+    } catch (e: unknown) {
+      const status = (e as { response?: { status?: number } })?.response?.status;
+      if (status === 403) {
+        setError('No tienes permisos para ver los registros de auditoría.');
+      } else {
+        setError('Error al cargar los logs. Intenta de nuevo.');
+      }
+    } finally { setLoading(false); }
   }, [page, action]);
 
   useEffect(() => { fetchLogs(); }, [fetchLogs]);
 
   const renderContent = () => {
     if (loading) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando logs...</div>;
+    if (error) return (
+      <div style={{ padding: '60px', textAlign: 'center' }}>
+        <div style={{ fontSize: '40px', marginBottom: '12px' }}>🔒</div>
+        <p style={{ color: '#dc2626', fontWeight: '600', fontSize: '15px', margin: '0 0 4px' }}>{error}</p>
+        <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>Contacta al administrador del sistema si crees que esto es un error.</p>
+      </div>
+    );
     if (logs.length === 0) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>📭 Sin registros encontrados</div>;
     return (
       <div style={{ overflowX: 'auto' }}>
