@@ -10,7 +10,7 @@ const rules = [
   { label: 'Al menos un carácter especial (!@#$...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
 ];
 
-const ChangePassword = () => {
+const ChangePassword = ({ onClose }: { onClose?: () => void }) => {
   const [step, setStep] = useState<1 | 2>(1);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -60,6 +60,7 @@ const ChangePassword = () => {
       });
       setMessageType('success');
       setMessage('✅ Contraseña cambiada correctamente.');
+      setTimeout(() => onClose?.(), 2000);
     } catch {
       setMessageType('error');
       setMessage('Error al cambiar la contraseña. Intenta de nuevo.');

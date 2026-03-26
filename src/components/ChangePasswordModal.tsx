@@ -49,7 +49,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
         >
           <X className="w-5 h-5" />
         </button>
-        <ChangePassword />
+        <ChangePassword onClose={onClose} />
       </dialog>
     </>,
     document.body
