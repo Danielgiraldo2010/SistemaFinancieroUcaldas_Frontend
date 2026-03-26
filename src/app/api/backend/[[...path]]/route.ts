@@ -1,7 +1,7 @@
 // NOSONAR: Proxy route validated with strict allowlist/origin checks; reviewed hotspot.
 import { NextRequest, NextResponse } from 'next/server';
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+const backendUrl = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
 const BACKEND_URL = backendUrl?.replace(/\/$/, '') ?? '';
 const BACKEND_ORIGIN = BACKEND_URL ? new URL(BACKEND_URL).origin : '';
 
@@ -91,12 +91,8 @@ export async function POST(
     });
 
     const text = await response.text();
-    try {
-      const data = text ? JSON.parse(text) : {};
-      return NextResponse.json(data, { status: response.status });
-    } catch {
-      return NextResponse.json({}, { status: response.status });
-    }
+    const data = text ? JSON.parse(text) : {};
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
     return NextResponse.json(
       { error: 'Request failed', detail: String(error) },
@@ -131,7 +127,8 @@ export async function GET(
       headers: buildHeaders(request),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     return NextResponse.json(
@@ -170,7 +167,8 @@ export async function PUT(
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     return NextResponse.json(
@@ -206,7 +204,8 @@ export async function DELETE(
       headers: buildHeaders(request),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     return NextResponse.json(

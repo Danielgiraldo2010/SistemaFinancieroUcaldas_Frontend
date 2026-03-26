@@ -8,11 +8,18 @@ export default function SecurityPage() {
   const [ips, setIps]           = useState<IpBlackList[]>([]);
   const [loading, setLoading]   = useState(true);
   const [unlocking, setUnlocking] = useState('');
+  const [error, setError]       = useState<string | null>(null);
 
   const fetchIps = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try { setIps(await securityService.getBlockedIps(true)); }
-    catch (e) { console.error(e); }
+    catch (e: unknown) {
+      const status = (e as { response?: { status?: number } })?.response?.status;
+      if (status === 403) setError('No tienes permisos para ver esta sección.');
+      else if (status === 404) setError('El módulo de seguridad no está disponible en el servidor.');
+      else setError('Error al cargar los datos. Intenta de nuevo.');
+    }
     finally { setLoading(false); }
   }, []);
 
@@ -36,6 +43,12 @@ export default function SecurityPage() {
 
   const renderContent = () => {
     if (loading) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>⏳ Cargando IPs bloqueadas...</div>;
+    if (error) return (
+      <div style={{ padding: '60px', textAlign: 'center' }}>
+        <div style={{ fontSize: '40px', marginBottom: '12px' }}>🔒</div>
+        <p style={{ color: '#dc2626', fontWeight: '600', fontSize: '15px', margin: '0 0 4px' }}>{error}</p>
+      </div>
+    );
     if (ips.length === 0) return <div style={{ padding: '60px', textAlign: 'center', color: '#6b7280' }}>✅ No hay IPs bloqueadas actualmente</div>;
     return (
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
