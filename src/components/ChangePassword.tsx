@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Eye, EyeOff, CheckCircle2, Circle } from 'lucide-react';
+import { securityService } from '@/services';
 
 const rules = [
   { label: 'Mínimo 8 caracteres', test: (p: string) => p.length >= 8 },
@@ -31,23 +32,11 @@ const ChangePassword = () => {
       return;
     }
 
-    // Pendiente integrar validación real con backend.
-    // Ejemplo de integración:
-    // try {
-    //   await authService.verifyPassword({ currentPassword });
-    //   setMessage('');
-    //   setStep(2);
-    // } catch (error) {
-    //   setMessageType('error');
-    //   setMessage('Contraseña incorrecta. Intenta de nuevo.');
-    // }
-
-    // Simulación temporal - remover cuando el backend esté listo
     setMessage('');
     setStep(2);
   };
 
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!allRulesPassed) {
       setMessageType('error');
@@ -63,25 +52,20 @@ const ChangePassword = () => {
     setIsSubmitting(true);
     setMessage('');
 
-    // Pendiente integrar cambio real de contraseña con backend.
-    // Ejemplo de integración:
-    // try {
-    //   await authService.changePassword({ currentPassword, newPassword });
-    //   setMessageType('success');
-    //   setMessage('✅ Contraseña cambiada correctamente.');
-    //   setIsSubmitting(false);
-    // } catch (error) {
-    //   setMessageType('error');
-    //   setMessage('Error al cambiar la contraseña. Intenta de nuevo.');
-    //   setIsSubmitting(false);
-    // }
-
-    // Simulación temporal - remover cuando el backend esté listo
-    setTimeout(() => {
+    try {
+      await securityService.changePassword({
+        oldPassword: currentPassword,
+        newPassword,
+        confirmPassword,
+      });
       setMessageType('success');
       setMessage('✅ Contraseña cambiada correctamente.');
+    } catch {
+      setMessageType('error');
+      setMessage('Error al cambiar la contraseña. Intenta de nuevo.');
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (

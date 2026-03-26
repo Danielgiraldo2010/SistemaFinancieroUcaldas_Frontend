@@ -29,7 +29,7 @@ export const endpoints = {
     blockIp: '/api/Security/block-ip',
     unblockIp: '/api/Security/unblock-ip',
     unlockAccount: '/api/Security/unlock-account',
-    changePassword: '/api/Security/change-password',
+    changePassword: '/api/Authentication/reset-password',
     getUserSessions: '/api/Security/sessions',
     revokeSession: (sessionId: string) => `/api/Security/sessions/${sessionId}`,
     getSecuritySettings: '/api/Security/settings',

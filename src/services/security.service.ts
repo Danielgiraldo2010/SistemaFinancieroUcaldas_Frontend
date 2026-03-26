@@ -6,6 +6,7 @@ import {
   BlockIpCommand,
   UnblockIpCommand,
   UnlockAccountCommand,
+  ChangePasswordCommand,
   Result,
 } from '@/core';
 
@@ -24,6 +25,10 @@ export class SecurityService implements ISecurityRepository {
 
   async unlockAccount(command: UnlockAccountCommand): Promise<Result> {
     return apiClient.post<Result>(endpoints.security.unlockAccount, command);
+  }
+
+  async changePassword(command: ChangePasswordCommand): Promise<Result> {
+    return apiClient.post<Result>(endpoints.security.changePassword, command);
   }
 }
 

@@ -90,8 +90,13 @@ export async function POST(
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    const text = await response.text();
+    try {
+      const data = text ? JSON.parse(text) : {};
+      return NextResponse.json(data, { status: response.status });
+    } catch {
+      return NextResponse.json({}, { status: response.status });
+    }
   } catch (error) {
     return NextResponse.json(
       { error: 'Request failed', detail: String(error) },

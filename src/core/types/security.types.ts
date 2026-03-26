@@ -37,3 +37,9 @@ export interface UnblockIpCommand {
 export interface UnlockAccountCommand {
   userId?: string;
 }
+
+export interface ChangePasswordCommand {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
